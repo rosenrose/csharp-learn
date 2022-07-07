@@ -4,38 +4,34 @@ namespace ConsoleApp1
 {
     class Program
     {
-        static bool BoolVar;
         static void Main(string[] args)
         {
-            bool LocalBoolVar = true;
-            Console.WriteLine("{0} {1}", BoolVar, LocalBoolVar);
+            var a = 3.14f;
+            float b = 10.0f;
+            Console.WriteLine("{0} {1:f0} {2:f1}", a, b, a + b);
 
-            int Number = '7';
-            Console.WriteLine("{0} '{1}'", Number, (char)(Number + 1));
-            Number = '가';
-            Console.WriteLine("{0} '{1}'", Number, (char)(Number + 1));
-            float Number2 = '가';
-            Console.WriteLine("{0} '{1}'", Number2, (char)(Number2 + 2.3));
+            int? c = null;
+            string d = null;
+            Console.WriteLine("{0} {1} {2} {3}", c, c.HasValue, c == null, d);
 
-            byte x = 1, y = 2;
-            int Result = x + y;
-            Console.WriteLine(Result);
+            var Var1 = a.ToString();
+            var Var2 = double.Parse(Var1);
+            var Var3 = Convert.ToSingle(Var2);
+            Console.WriteLine("{0} {1}", Var2, Var3);
 
-            Console.WriteLine("{0} ~ {1}", byte.MinValue, byte.MaxValue);
-            Console.WriteLine("{0} ~ {1}", sbyte.MinValue, sbyte.MaxValue);
-            Console.WriteLine("{0} ~ {1}", short.MinValue, short.MaxValue);
-            Console.WriteLine("{0} ~ {1}", int.MinValue, int.MaxValue);
-            Console.WriteLine("{0} ~ {1}", long.MinValue, long.MaxValue);
-            Console.WriteLine("{0} ~ {1} {2} {3} {4}", float.MinValue, float.MaxValue, float.NegativeInfinity, float.PositiveInfinity, float.NaN);
-            Console.WriteLine("{0} ~ {1}", double.MinValue, double.MaxValue);
-            Console.WriteLine("{0} ~ {1}", decimal.MinValue, decimal.MaxValue);
+            int m = 123;
+            object obj = m;
+            m = 30;
+            int n = (int)obj;
+            obj = "zz";
+            obj = true;
+            obj = 3.14;
+            Console.WriteLine("{0} {1} {2}", m, n, obj);
 
-            string str = "ab하하";
-            str += "C#";
-            Console.WriteLine("{0} {1} {2} {3}", str, str[4], str.Length, str == "");
-            string path = @"C:\temp\test.txt";
-            string path2 = "C:\\temp\\test.txt";
-            Console.WriteLine("{0} {1}", path, path2);
+            int i = 10;
+            int k = i;
+            i = 20;
+            Console.WriteLine(k);
         }
     }
 }
