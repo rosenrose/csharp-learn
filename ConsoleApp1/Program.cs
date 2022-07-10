@@ -2,33 +2,28 @@ namespace ConsoleApp1
 {
     internal class Program
     {
+        class A { }
+        class B { }
         static void Main(string[] args)
         {
-            (int, double) t1 = (10, 3.0);
-            Console.WriteLine($"{t1.Item1} {t1.Item2} {t1}");
-            t1.Item1 = 5;
-            Console.WriteLine(t1);
+            int Val = 10;
+            Console.WriteLine($"{Val is float} {Val is object}");
 
-            var t2 = (10, true, 9.0f, "aa");
-            Console.WriteLine(t2);
+            object obj = Val;
+            Console.WriteLine($"{obj is int} {obj is double}");
 
-            (int a, bool b) t3 = (1, false);
-            Console.WriteLine($"{t3.a} {t3.b}");
+            Console.WriteLine($"{obj.GetType()} {typeof(object)}");
 
-            var v = new { Amount = 108, Message = "Hello" };
-            Console.WriteLine(v);
+            int? Val2 = obj as int?;
+            A a = new A();
+            object obj2 = a;
+            B b = obj2 as B;
 
-            var t4 = ("home", 3.6);
-            var (destination, distance) = t4;
-            Console.WriteLine($"{destination} to {distance}km");
+            Console.WriteLine($"{Val2} {b == null}");
 
-            var array = new[] { 1, 0, 3, 4 };
-            Range p = 1..3;
-            Console.WriteLine($"{array[^1]} {array[p].Length}");
-
-            string[] words = { "bot", "apple", "apricot" };
-            int minimalLength = words.Where(w => w.StartsWith("a")).Min(w => w.Length);
-            Console.WriteLine(minimalLength);
+            object obj3 = null;
+            Console.WriteLine($"{Convert.ToBoolean(3)} {Convert.ToBoolean(null)} {Convert.ToBoolean(obj)} {Convert.ToBoolean(obj3)}");
+            Console.WriteLine(Convert.ToBoolean(obj2));
         }
     }
 }
