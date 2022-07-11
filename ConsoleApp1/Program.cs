@@ -35,6 +35,7 @@ namespace ConsoleApp1
             catch (Exception e)
             {
                 Console.WriteLine($"{e.Message} {e.StackTrace}");
+                Console.WriteLine(new[] { 1, 2 }[^2]);
             }
 
             throw new Exception("zz");
