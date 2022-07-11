@@ -4,50 +4,69 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            int[] arr = { 1, 2 };
-            Console.WriteLine(arr.Count());
+            string[] Days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+            MutateArray(Days);
+            PrintArray(Days);
 
-            int[,] arr2 = new int[3, 2];
-            Console.WriteLine($"{arr2[0, 0]} {arr2.Length} {arr2.Rank} {arr2.GetLength(0)} {arr2.GetType()}");
+            string[] KorDays = NewArray(Days);
+            PrintArray(KorDays);
 
-            int[,] arr3 = { { 1, 2 }, { 3, 4 } };
-            foreach (var i in arr3)
+            PrintArray(CreateArray(6));
+            PrintArray(CreateArray2(2, 4));
+
+            Array.Clear(Days);
+            Console.WriteLine($"{Days[0] is null}");
+
+            string[] ClonedDays = (string[])KorDays.Clone();
+            KorDays[0] = "AA";
+            Console.WriteLine(ClonedDays[0]);
+        }
+
+        static void MutateArray(string[] arr)
+        {
+            string[] KorDays = { "일", "월", "화", "수", "목", "금", "토" };
+            foreach (var (Day, i) in KorDays.Select((v, i) => (v, i)))
             {
-                Console.WriteLine(i);
+                arr[i] = Day;
             }
+        }
 
-            for (int i = 0; i < arr3.Rank; i++)
+        static string[] NewArray(string[] arr)
+        {
+            string[] KorDays = { "일", "월", "화", "수", "목", "금", "토" };
+            return arr.Select((_, i) => KorDays[i]).ToArray();
+        }
+
+        static int[] CreateArray(int size)
+        {
+            return new int[size].Select((_, i) => i + 1).ToArray();
+        }
+
+        static int[,] CreateArray2(int row, int col)
+        {
+            int[,] Arr = new int[row, col];
+            for (int i = 0; i < Arr.Length; i++)
             {
-                for (int j = 0; j < arr3.GetLength(0); j++)
-                {
-                    Console.WriteLine($"val: {arr3[i, j]} {i} {j}");
-                }
+                Arr[i / col, i % col] = (i + 1) * 2;
             }
+            return Arr;
+        }
 
-            int[][] arr4 = { new int[] { 1, 2 }, new int[] { 4, 6, 8 } };
-            Console.WriteLine($"{arr4.Length} {arr4.Rank} {arr4.GetLength(0)} {arr4.GetType()} {arr4.Count()}");
-            foreach (var (row, i) in arr4.Select((v, i) => (v, i)))
+        static void PrintArray<T>(T[] Arr)
+        {
+            foreach (var item in Arr)
             {
-                foreach (var (value, j) in row.Select((v, i) => (v, i)))
-                {
-                    Console.WriteLine($"val: {value} {i} {j}");
-                }
+                Console.Write($"{item} ");
             }
-
-            int[][][] arr5 = {
-                new int[][] {
-                    new int[] { 1, 2 },
-                    new int[] { 4, 6, 8 }
-                },
-                new int[][] {
-                    new int[] { 1 },
-                    new int[] { 10, 10, 11, 7 }
-                }
-            };
-            int[][,] arr6 = {
-                new int[,] { { 1 }, { 2 } },
-                new int[,] { { 8 }, { 9 } }
-            };
+            Console.WriteLine();
+        }
+        static void PrintArray<T>(T[,] Arr)
+        {
+            foreach (var item in Arr)
+            {
+                Console.Write($"{item} ");
+            }
+            Console.WriteLine();
         }
     }
 }
