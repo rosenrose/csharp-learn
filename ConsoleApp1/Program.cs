@@ -1,29 +1,43 @@
+using System.Collections;
+
 namespace ConsoleApp1
 {
     internal class Program
     {
-        class A { }
-        class B { }
         static void Main(string[] args)
         {
-            int Val = 10;
-            Console.WriteLine($"{Val is float} {Val is object}");
+            int Val = 15;
 
-            object obj = Val;
-            Console.WriteLine($"{obj is int} {obj is double}");
+            switch (Val)
+            {
+                case < 10:
+                    Console.WriteLine(Val + 10);
+                    break;
+                case > 10:
+                    Console.WriteLine(Val - 10);
+                    break;
+            }
 
-            Console.WriteLine($"{obj.GetType()} {typeof(object)}");
+            ArrayList List = new();
+            List.Add(1);
+            List.Add("a");
+            List.Add(true);
 
-            int? Val2 = obj as int?;
-            A a = new A();
-            object obj2 = a;
-            B b = obj2 as B;
+            foreach (var i in List)
+            {
+                Console.WriteLine($"{i} {i.GetType()}");
+            }
 
-            Console.WriteLine($"{Val2} {b == null}");
+            try
+            {
+                int i = new[] { 1, 2 }[-2];
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"{e.Message} {e.StackTrace}");
+            }
 
-            object obj3 = null;
-            Console.WriteLine($"{Convert.ToBoolean(3)} {Convert.ToBoolean(null)} {Convert.ToBoolean(obj)} {Convert.ToBoolean(obj3)}");
-            Console.WriteLine(Convert.ToBoolean(obj2));
+            throw new Exception("zz");
         }
     }
 }
