@@ -4,69 +4,50 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            string[] Days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-            MutateArray(Days);
-            PrintArray(Days);
-
-            string[] KorDays = NewArray(Days);
-            PrintArray(KorDays);
-
-            PrintArray(CreateArray(6));
-            PrintArray(CreateArray2(2, 4));
-
-            Array.Clear(Days);
-            Console.WriteLine($"{Days[0] is null}");
-
-            string[] ClonedDays = (string[])KorDays.Clone();
-            KorDays[0] = "AA";
-            Console.WriteLine(ClonedDays[0]);
-        }
-
-        static void MutateArray(string[] arr)
-        {
-            string[] KorDays = { "일", "월", "화", "수", "목", "금", "토" };
-            foreach (var (Day, i) in KorDays.Select((v, i) => (v, i)))
+            FileStream fs = new("test.txt", FileMode.Create);
+            using (StreamWriter sw = new(fs))
             {
-                arr[i] = Day;
+                sw.Write(12);
             }
-        }
-
-        static string[] NewArray(string[] arr)
-        {
-            string[] KorDays = { "일", "월", "화", "수", "목", "금", "토" };
-            return arr.Select((_, i) => KorDays[i]).ToArray();
-        }
-
-        static int[] CreateArray(int size)
-        {
-            return new int[size].Select((_, i) => i + 1).ToArray();
-        }
-
-        static int[,] CreateArray2(int row, int col)
-        {
-            int[,] Arr = new int[row, col];
-            for (int i = 0; i < Arr.Length; i++)
+            using (StreamWriter sw2 = new("test.txt", true))    //append: true
             {
-                Arr[i / col, i % col] = (i + 1) * 2;
+                sw2.WriteLine("dd");
+                sw2.WriteLine(3.14);
+                sw2.WriteLine(new int[] { 1, 2 });
             }
-            return Arr;
-        }
 
-        static void PrintArray<T>(T[] Arr)
-        {
-            foreach (var item in Arr)
+            string? pPath = Environment.ProcessPath;
+            string cPath = Environment.CurrentDirectory;
+            File.WriteAllText("test2.txt", "write");
+            File.WriteAllLines("test2.txt", new string[] { pPath!, cPath });
+
+            //Console.ReadLine();
+
+            FileStream fs2 = new("test.txt", FileMode.Open, FileAccess.Read);
+            using (StreamReader sr = new(fs2))
             {
-                Console.Write($"{item} ");
+                Console.WriteLine(sr.Read());
+                Console.WriteLine(sr.ReadLine());
             }
-            Console.WriteLine();
-        }
-        static void PrintArray<T>(T[,] Arr)
-        {
-            foreach (var item in Arr)
+            string Line;
+            using (StreamReader sr2 = new("test.txt"))
             {
-                Console.Write($"{item} ");
+                Line = sr2.ReadLine()!;
+                Console.WriteLine($"1 {Line} {Line[^1] == '\n'}");
+                Console.WriteLine($"2 {sr2.ReadToEnd()}");
             }
-            Console.WriteLine();
+
+            Console.WriteLine($"3 {File.ReadAllText("test2.txt")}");
+            Console.Write("4 ");
+            foreach (var line in File.ReadAllLines("test2.txt"))
+            {
+                Console.WriteLine($"{line} {line[^1] == '\n'}");
+            }
+            Console.Write("5 ");
+            foreach (var line in File.ReadLines("test2.txt"))
+            {
+                Console.WriteLine($"{line} {line[^1] == '\n'}");
+            }
         }
     }
 }
