@@ -2,51 +2,44 @@ namespace ConsoleApp1
 {
     internal class Program
     {
+        struct Grade
+        {
+            public int Kor, Eng, Math, Total;
+            public double Avg;
+        }
+
         static void Main(string[] args)
         {
-            FileStream fs = new("test.txt", FileMode.Create);
-            using (StreamWriter sw = new(fs))
-            {
-                sw.Write(12);
-            }
-            using (StreamWriter sw2 = new("test.txt", true))    //append: true
-            {
-                sw2.WriteLine("dd");
-                sw2.WriteLine(3.14);
-                sw2.WriteLine(new int[] { 1, 2 });
-            }
+            Console.Write("number of students: ");
+            int Count = int.Parse(Console.ReadLine()!);
 
-            string? pPath = Environment.ProcessPath;
-            string cPath = Environment.CurrentDirectory;
-            File.WriteAllText("test2.txt", "write");
-            File.WriteAllLines("test2.txt", new string[] { pPath!, cPath });
+            File.WriteAllText("test.txt", $"number of students: {Count}\n");
+            Grade[] Grades = new Grade[Count];
 
-            //Console.ReadLine();
+            for (int i = 0; i < Count; i++)
+            {
+                Console.Write($"student {i + 1} grades: ");
+                (Grades[i].Kor, Grades[i].Eng, Grades[i].Math) = Console.ReadLine()!.Split(new char[] { ' ' }) switch
+                {
+                    var list => (int.Parse(list[0]), int.Parse(list[1]), int.Parse(list[2]))
+                };
+                Grades[i].Total = Grades[i].Kor + Grades[i].Eng + Grades[i].Math;
+                Grades[i].Avg = Math.Round(Grades[i].Total / 3.0f);
+            }
+            File.AppendAllLines("test.txt", Grades.Select(grade => $"{grade.Kor} {grade.Eng} {grade.Math} {grade.Total} {grade.Avg:f1}").ToArray());
 
-            FileStream fs2 = new("test.txt", FileMode.Open, FileAccess.Read);
-            using (StreamReader sr = new(fs2))
+            Console.Write("file name: ");
+            string filename = Console.ReadLine()!;
+            using (StreamReader sr = new(filename))
             {
-                Console.WriteLine(sr.Read());
-                Console.WriteLine(sr.ReadLine());
-            }
-            string Line;
-            using (StreamReader sr2 = new("test.txt"))
-            {
-                Line = sr2.ReadLine()!;
-                Console.WriteLine($"1 {Line} {Line[^1] == '\n'}");
-                Console.WriteLine($"2 {sr2.ReadToEnd()}");
-            }
+                Count = int.Parse(sr.ReadLine()!.Split(new char[] { ':' })[1]);
+                Console.WriteLine($"count: {Count}");
 
-            Console.WriteLine($"3 {File.ReadAllText("test2.txt")}");
-            Console.Write("4 ");
-            foreach (var line in File.ReadAllLines("test2.txt"))
-            {
-                Console.WriteLine($"{line} {line[^1] == '\n'}");
-            }
-            Console.Write("5 ");
-            foreach (var line in File.ReadLines("test2.txt"))
-            {
-                Console.WriteLine($"{line} {line[^1] == '\n'}");
+                for (int i = 0; i < Count; i++)
+                {
+                    string[] grades = sr.ReadLine()!.Split(new char[] { ' ' });
+                    Console.WriteLine($"kor: {grades[0]}, eng: {grades[1]}, math: {grades[2]}, total: {grades[3]}, average: {grades[4]}");
+                }
             }
         }
     }
