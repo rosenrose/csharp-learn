@@ -2,44 +2,60 @@ namespace ConsoleApp1
 {
     internal class Program
     {
-        struct Grade
+        struct Data
         {
-            public int Kor, Eng, Math, Total;
-            public double Avg;
+            public int Var1;
+            public double Var2;
+            public Data(int Var1_, double Var2_) => (Var1, Var2) = (Var1_, Var2_);
         }
 
         static void Main(string[] args)
         {
-            Console.Write("number of students: ");
-            int Count = int.Parse(Console.ReadLine()!);
-
-            File.WriteAllText("test.txt", $"number of students: {Count}\n");
-            Grade[] Grades = new Grade[Count];
-
-            for (int i = 0; i < Count; i++)
+            using (BinaryWriter bw = new(File.Open("test.dat", FileMode.Create)))
             {
-                Console.Write($"student {i + 1} grades: ");
-                (Grades[i].Kor, Grades[i].Eng, Grades[i].Math) = Console.ReadLine()!.Split(new char[] { ' ' }) switch
-                {
-                    var list => (int.Parse(list[0]), int.Parse(list[1]), int.Parse(list[2]))
-                };
-                Grades[i].Total = Grades[i].Kor + Grades[i].Eng + Grades[i].Math;
-                Grades[i].Avg = Math.Round(Grades[i].Total / 3.0f);
+                bw.Write(12);
+                bw.Write(3.14);
+                bw.Write("hello");
+                bw.Write("가나");
             }
-            File.AppendAllLines("test.txt", Grades.Select(grade => $"{grade.Kor} {grade.Eng} {grade.Math} {grade.Total} {grade.Avg:f1}").ToArray());
 
-            Console.Write("file name: ");
-            string filename = Console.ReadLine()!;
-            using (StreamReader sr = new(filename))
+            FileStream fs = File.Open("test.dat", FileMode.Open);
+            using (BinaryReader br = new(fs))
             {
-                Count = int.Parse(sr.ReadLine()!.Split(new char[] { ':' })[1]);
-                Console.WriteLine($"count: {Count}");
+                Console.WriteLine($"{br.ReadInt32()} {br.ReadDouble()} {br.ReadString()} {br.ReadString()}");
+                fs.Seek(0, SeekOrigin.Begin);
+                Console.WriteLine($"{br.ReadInt32()} {br.ReadInt32()} {br.ReadInt32()} {br.ReadInt64()} {br.ReadInt16()} {br.ReadInt16()}");
+                fs.Seek(0, SeekOrigin.Begin);
+                Console.WriteLine($"{br.ReadDouble()} {br.ReadDouble()} {br.ReadDouble()}");
+                fs.Seek(0, SeekOrigin.Begin);
+                Console.WriteLine($"{br.ReadString()}");
+            }
 
-                for (int i = 0; i < Count; i++)
+
+            Data[] DataArr = new Data[2] { new(10, 3.14), new(5, 0.5) };
+
+            using (BinaryWriter bw = new(File.Open("test.dat", FileMode.Create)))
+            {
+                foreach (var data in DataArr)
                 {
-                    string[] grades = sr.ReadLine()!.Split(new char[] { ' ' });
-                    Console.WriteLine($"kor: {grades[0]}, eng: {grades[1]}, math: {grades[2]}, total: {grades[3]}, average: {grades[4]}");
+                    bw.Write(data.Var1);
+                    bw.Write(data.Var2);
                 }
+            }
+
+            using (BinaryReader br = new(File.Open("test.dat", FileMode.Open)))
+            {
+                do
+                {
+                    try
+                    {
+                        Console.WriteLine($"{br.ReadInt32()} {br.ReadDouble()}");
+                    }
+                    catch (EndOfStreamException e)
+                    {
+                        break;
+                    }
+                } while (true);
             }
         }
     }
