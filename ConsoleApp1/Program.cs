@@ -1,61 +1,53 @@
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
+
 namespace ConsoleApp1
 {
     internal class Program
     {
+        [Serializable]
         struct Data
         {
-            public int Var1;
-            public double Var2;
-            public Data(int Var1_, double Var2_) => (Var1, Var2) = (Var1_, Var2_);
+            public int Var1 { get; set; }
+            public double Var2 { get; set; }
+            public string Var3 { get; set; }
+            [NonSerialized] public bool Var4;
+            public Data(int Var1_, double Var2_, string Var3_) => (Var1, Var2, Var3, Var4) = (Var1_, Var2_, Var3_, true);
         }
 
         static void Main(string[] args)
         {
-            using (BinaryWriter bw = new(File.Open("test.dat", FileMode.Create)))
+            Data[] DataArr = new Data[2] { new(10, 3.14, "hello"), new(5, 0.5, "가나ㄱㅋ") };
+            BinaryFormatter bf = new();
+
+            using (FileStream fs = File.Open("test.dat", FileMode.Create))
             {
-                bw.Write(12);
-                bw.Write(3.14);
-                bw.Write("hello");
-                bw.Write("가나");
+                bf.Serialize(fs, DataArr);
             }
 
-            FileStream fs = File.Open("test.dat", FileMode.Open);
-            using (BinaryReader br = new(fs))
+            var options = new JsonSerializerOptions
             {
-                Console.WriteLine($"{br.ReadInt32()} {br.ReadDouble()} {br.ReadString()} {br.ReadString()}");
-                fs.Seek(0, SeekOrigin.Begin);
-                Console.WriteLine($"{br.ReadInt32()} {br.ReadInt32()} {br.ReadInt32()} {br.ReadInt64()} {br.ReadInt16()} {br.ReadInt16()}");
-                fs.Seek(0, SeekOrigin.Begin);
-                Console.WriteLine($"{br.ReadDouble()} {br.ReadDouble()} {br.ReadDouble()}");
-                fs.Seek(0, SeekOrigin.Begin);
-                Console.WriteLine($"{br.ReadString()}");
+                WriteIndented = true,
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.HangulSyllables, UnicodeRanges.HangulCompatibilityJamo)
+            };
+            File.WriteAllText("test.txt", JsonSerializer.Serialize(DataArr, options));
+
+
+            using (FileStream fs = File.Open("test.dat", FileMode.Open))
+            {
+                DataArr = (Data[])bf.Deserialize(fs);
+            }
+            foreach (var data in DataArr)
+            {
+                Console.WriteLine($"{data.Var1} {data.Var2} {data.Var3} {data.Var4}");
             }
 
-
-            Data[] DataArr = new Data[2] { new(10, 3.14), new(5, 0.5) };
-
-            using (BinaryWriter bw = new(File.Open("test.dat", FileMode.Create)))
+            DataArr = JsonSerializer.Deserialize<Data[]>(File.ReadAllText("test.txt"))!;
+            foreach (var data in DataArr)
             {
-                foreach (var data in DataArr)
-                {
-                    bw.Write(data.Var1);
-                    bw.Write(data.Var2);
-                }
-            }
-
-            using (BinaryReader br = new(File.Open("test.dat", FileMode.Open)))
-            {
-                do
-                {
-                    try
-                    {
-                        Console.WriteLine($"{br.ReadInt32()} {br.ReadDouble()}");
-                    }
-                    catch (EndOfStreamException e)
-                    {
-                        break;
-                    }
-                } while (true);
+                Console.WriteLine($"{data.Var1} {data.Var2} {data.Var3} {data.Var4}");
             }
         }
     }
