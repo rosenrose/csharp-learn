@@ -1,4 +1,3 @@
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
@@ -19,33 +18,21 @@ namespace ConsoleApp1
 
         static void Main(string[] args)
         {
-            Data[] DataArr = new Data[2] { new(10, 3.14, "hello"), new(5, 0.5, "가나ㄱㅋ") };
-            BinaryFormatter bf = new();
-
-            using (FileStream fs = File.Open("test.dat", FileMode.Create))
+            List<Data> list = new()
             {
-                bf.Serialize(fs, DataArr);
-            }
+                new Data(3, 5.14, "world"),
+                new Data(10, 9.0, "ㅎㄴ거카"),
+            };
 
             var options = new JsonSerializerOptions
             {
-                WriteIndented = true,
+                //WriteIndented = true,
                 Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.HangulSyllables, UnicodeRanges.HangulCompatibilityJamo)
             };
-            File.WriteAllText("test.txt", JsonSerializer.Serialize(DataArr, options));
+            File.WriteAllText("test.txt", JsonSerializer.Serialize(list, options));
 
-
-            using (FileStream fs = File.Open("test.dat", FileMode.Open))
-            {
-                DataArr = (Data[])bf.Deserialize(fs);
-            }
-            foreach (var data in DataArr)
-            {
-                Console.WriteLine($"{data.Var1} {data.Var2} {data.Var3} {data.Var4}");
-            }
-
-            DataArr = JsonSerializer.Deserialize<Data[]>(File.ReadAllText("test.txt"))!;
-            foreach (var data in DataArr)
+            list = JsonSerializer.Deserialize<List<Data>>(File.ReadAllText("test.txt"))!;
+            foreach (var data in list)
             {
                 Console.WriteLine($"{data.Var1} {data.Var2} {data.Var3} {data.Var4}");
             }
