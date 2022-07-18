@@ -25,6 +25,11 @@ namespace Smart_Cooker
                 ConsoleColor.DarkGreen, ConsoleColor.DarkMagenta, ConsoleColor.DarkRed, ConsoleColor.DarkYellow
             };
 
+            foreach (var Color in Colors[^2..])
+            {
+                Console.ForegroundColor = Color;
+                Console.WriteLine(Color);
+            }
             foreach (var (DarkColor, i) in DarkColors.Select((v, i) => (v, i)))
             {
                 Console.ForegroundColor = Colors[i];
