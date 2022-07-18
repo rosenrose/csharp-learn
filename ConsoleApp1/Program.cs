@@ -20,8 +20,8 @@ namespace ConsoleApp1
         {
             List<Data> list = new()
             {
-                new Data(3, 5.14, "world"),
-                new Data(10, 9.0, "ㅎㄴ거카"),
+                new(3, 5.14, "world"),
+                new(10, 9.0, "ㅎㄴ거카"),
             };
 
             var options = new JsonSerializerOptions
