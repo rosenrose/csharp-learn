@@ -47,8 +47,13 @@ namespace Smart_Cooker
 
         public const int MessageBoxX = MenuX + (MenuWidth - MessageBoxWidth) / 2;
         public const int MessageBoxY = MenuY + (MenuHeight - MessageBoxHeight) / 2;
-        public const int MessageBoxWidth = MenuWidth / 2;
+        public const int MessageBoxWidth = MenuWidth / 2 + 10;
         public const int MessageBoxHeight = 3;
+
+        public const int RicePerPerson = 160;
+        public const int WaterPerPerson = 170;
+        public const int RiceMax = 20 * 1000;
+        public const int WaterMax = 22 * 1000;
 
         public struct RiceCookerInfo
         {
@@ -56,6 +61,7 @@ namespace Smart_Cooker
             public int Water;
             public bool IsCoverOpen = false;
             public bool Power = false;
+            public bool isEmpty = true;
             public int Count = 0;
             public CookerProcess State = CookerProcess.None;
             public RiceCookerInfo(int Rice_, int Water_) => (Rice, Water) = (Rice_, Water_);
@@ -67,21 +73,23 @@ namespace Smart_Cooker
         {
             Console.Clear();
             Console.SetWindowSize(WindowWidth, WindowHeight);
-            RiceCookerInfo RCInfo = new(10 * 1000, 5 * 1000);
-            string[] MenuItemsKor = { "전원", "뚜껑", "취사", "보온", "취소", "인원수", "쌀", "물", "종료" };
+            RiceCookerInfo RCInfo = new(5 * 1000, 10 * 1000);
+            string[] MenuItemsKor = { "전원", "뚜껑", "취사", "보온", "밥먹기", "인원수", "쌀", "물", "종료" };
 
             //Test();
             DrawBox(RiceCookerX, RiceCookerY, RiceCookerWidth, RiceCookerHeight, "스마트 밥솥");
-            DrawBox(RiceX, RiceY, RiceWidth, RiceHeight, "쌀통");
-            DrawBox(WaterX, WaterY, WaterWidth, WaterHeight, "물통");
-            DrawBox(InfoX, InfoY, InfoWidth, InfoHeight, "밥솥 정보");
-            DrawBox(MenuX, MenuY, MenuWidth, MenuHeight, "메뉴");
             DrawBox(RiceCookerBodyX, RiceCookerBodyY, RiceCookerBodyWidth, RiceCookerBodyHeight, "밥솥");
             DrawRiceCookerCover(RiceCookerCoverX, RiceCookerCoverY, RiceCookerCoverWidth, RiceCookerCoverHeight, RCInfo.IsCoverOpen);
-            DrawRiceCookerInfo(RCInfo);
             DrawPowerLine(RCInfo.Power);
+
+            DrawBox(RiceX, RiceY, RiceWidth, RiceHeight, "쌀통");
+            DrawBox(WaterX, WaterY, WaterWidth, WaterHeight, "물통");
             DrawRice(RCInfo.Rice);
             DrawWater(RCInfo.Water);
+
+            DrawBox(InfoX, InfoY, InfoWidth, InfoHeight, "밥솥 정보");
+            DrawRiceCookerInfo(RCInfo);
+            DrawBox(MenuX, MenuY, MenuWidth, MenuHeight, "메뉴");
 
             do
             {
@@ -91,24 +99,90 @@ namespace Smart_Cooker
                 {
                     case MenuItems.Power:
                         RCInfo.Power = !RCInfo.Power;
+                        if (RCInfo.State == CookerProcess.Warming)
+                        {
+                            DrawRiceCookerBodyRicing("밥솥");
+                        }
+                        RCInfo.State = CookerProcess.None;
                         DrawPowerLine(RCInfo.Power);
                         break;
                     case MenuItems.Cover:
+                        if (RCInfo.State == CookerProcess.Cooking)
+                        {
+                            DrawMessageBox("취사중에는 뚜껑을 열 수 없습니다.");
+                            break;
+                        }
+
                         RCInfo.IsCoverOpen = !RCInfo.IsCoverOpen;
                         DrawRiceCookerCover(RiceCookerCoverX, RiceCookerCoverY, RiceCookerCoverWidth, RiceCookerCoverHeight, RCInfo.IsCoverOpen);
                         break;
                     case MenuItems.Cook:
-                        DrawMessageBox("zzzz");
+                        if (!RCInfo.Power)
+                        {
+                            DrawMessageBox("전원이 꺼져 있습니다.");
+                            break;
+                        }
+                        if (RCInfo.IsCoverOpen)
+                        {
+                            DrawMessageBox("뚜껑이 열려 있습니다.");
+                            break;
+                        }
+                        if (RCInfo.Count == 0)
+                        {
+                            DrawMessageBox("인원수를 입력해 주세요.");
+                            break;
+                        }
+
+                        RCInfo = Cook(RCInfo);
                         break;
                     case MenuItems.Warm:
+                        if (!RCInfo.Power)
+                        {
+                            DrawMessageBox("전원이 꺼져 있습니다.");
+                            break;
+                        }
+
+                        if (RCInfo.State == CookerProcess.Warming)
+                        {
+                            RCInfo.State = CookerProcess.None;
+                            DrawRiceCookerBodyRicing("밥솥");
+                        }
+                        else
+                        {
+                            RCInfo.State = CookerProcess.Warming;
+                            DrawRiceCookerBodyWarming("보온");
+                        }
                         break;
                     case MenuItems.Cancel:
                         break;
                     case MenuItems.Count:
+                        if (!RCInfo.Power)
+                        {
+                            DrawMessageBox("전원이 꺼져 있습니다.");
+                            break;
+                        }
+
+                        int Count;
+                        if (int.TryParse(DrawMessageBox("인원수 입력: "), out Count))
+                        {
+                            RCInfo.Count = Count;
+                        }
                         break;
                     case MenuItems.Rice:
+                        int Rice;
+                        if (int.TryParse(DrawMessageBox("추가할 쌀(kg): "), out Rice))
+                        {
+                            RCInfo.Rice += Math.Min(Rice * 1000, RiceMax - RCInfo.Rice);
+                            DrawRice(RCInfo.Rice);
+                        }
                         break;
                     case MenuItems.Water:
+                        int Water;
+                        if (int.TryParse(DrawMessageBox("추가할 물(리터): "), out Water))
+                        {
+                            RCInfo.Water += Math.Min(Water * 1000, WaterMax - RCInfo.Water);
+                            DrawWater(RCInfo.Water);
+                        }
                         break;
                 }
 
@@ -168,6 +242,24 @@ namespace Smart_Cooker
 
             return str.PadLeft(leftPadding + Length).PadRight(width);
         }
+        static int ConsoleLength(string str)
+        {
+            int Length = 0;
+
+            foreach (char c in str)
+            {
+                if (c < 128)
+                {
+                    Length += 1;
+                }
+                else if (('ㄱ' <= c && c <= 'ㅎ') || ('가' <= c && c <= '힣'))
+                {
+                    Length += 2;
+                }
+            }
+
+            return Length;
+        }
 
         static void DrawBox(int x, int y, int width, int height)
         {
@@ -185,7 +277,7 @@ namespace Smart_Cooker
         static void DrawBox(int x, int y, int width, int height, string title)
         {
             DrawBox(x, y, width, height);
-            if (title.Length > width / 2)
+            if (ConsoleLength(title) > width / 2)
             {
                 Console.SetCursorPosition(x + 1, y + 1);
             }
@@ -208,10 +300,9 @@ namespace Smart_Cooker
 
         static void DrawRice(int Amount_)
         {
-            int Amount = Amount_ / 1000;
-
             ClearBox(RiceX + 1, RiceY + 2, RiceWidth - 2, RiceHeight - 3);
 
+            int Amount = Amount_ / 1000;
             for (int i = 0; i < Amount; i++)
             {
                 Console.SetCursorPosition(RiceX + 1, RiceY + RiceHeight - 2 - i);
@@ -220,11 +311,10 @@ namespace Smart_Cooker
         }
         static void DrawWater(int Amount_)
         {
-            int Amount = Amount_ / 1000;
+            ClearBox(WaterX + 1, WaterY + 2, WaterWidth - 2, WaterHeight - 3);
             Console.BackgroundColor = ConsoleColor.Blue;
 
-            ClearBox(WaterX + 1, WaterY + 2, WaterWidth - 2, WaterHeight - 3);
-
+            int Amount = Amount_ / 1000;
             for (int i = 0; i < Amount; i++)
             {
                 Console.SetCursorPosition(WaterX + 1, WaterY + WaterHeight - 2 - i);
@@ -240,7 +330,7 @@ namespace Smart_Cooker
 
             if (IsCoverOpen)
             {
-                DrawBox(x, y - width_ + RiceCookerCoverHeight, height, width_);
+                DrawBox(x, y - width_ + RiceCookerCoverHeight, height + 1, width_);
             }
             else
             {
@@ -291,12 +381,143 @@ namespace Smart_Cooker
         }
         static string DrawMessageBox(string message)
         {
-            DrawBox(MessageBoxX, MessageBoxY, MessageBoxWidth, MessageBoxHeight, message);
+            DrawBox(MessageBoxX, MessageBoxY, MessageBoxWidth, MessageBoxHeight);
+            Console.SetCursorPosition(MessageBoxX + (MessageBoxWidth - ConsoleLength(message)) / 2, MessageBoxY + 1);
+            Console.Write(message);
             string? Input = Console.ReadLine();
             ClearBox(MessageBoxX, MessageBoxY, MessageBoxWidth, MessageBoxHeight);
 
             return Input ?? "";
         }
+
+        static RiceCookerInfo Cook(RiceCookerInfo RCInfo)
+        {
+            int Rice = RCInfo.Rice - (RCInfo.Count * RicePerPerson);
+            if (Rice < 0)
+            {
+                DrawMessageBox("쌀을 보충해주세요.");
+                return RCInfo;
+            }
+            if (RCInfo.Water - (RCInfo.Count * WaterPerPerson) * 3 < 0)
+            {
+                DrawMessageBox("물을 보충해주세요.");
+                return RCInfo;
+            }
+
+            DrawWater(RCInfo.Water);
+
+            RCInfo.State = CookerProcess.Ricing;
+            RCInfo.Rice = Rice;
+            DrawRice(RCInfo.Rice);
+            DrawRiceCookerInfo(RCInfo);
+            DrawRiceCookerBodyRicing("쌀 넣기");
+            Thread.Sleep(1000);
+
+            for (int i = 0; i < 2; i++)
+            {
+                RCInfo.State = CookerProcess.Watering;
+                RCInfo.Water -= RCInfo.Count * WaterPerPerson;
+                DrawWater(RCInfo.Water);
+                DrawRiceCookerInfo(RCInfo);
+                DrawRiceCookerBodyWatering("물 넣기");
+                Thread.Sleep(2000);
+
+                RCInfo.State = CookerProcess.Washing;
+                DrawRiceCookerInfo(RCInfo);
+                DrawRiceCookerBodyWashing("쌀 씻기");
+                Thread.Sleep(2000);
+
+                RCInfo.State = CookerProcess.Flushing;
+                DrawRiceCookerInfo(RCInfo);
+                DrawRiceCookerBodyFlushing("배수");
+                Thread.Sleep(1000);
+            }
+
+            RCInfo.State = CookerProcess.Cooking;
+            RCInfo.Water -= RCInfo.Count * WaterPerPerson;
+            DrawWater(RCInfo.Water);
+            DrawRiceCookerInfo(RCInfo);
+            DrawRiceCookerBodyCooking("취사 중");
+            Thread.Sleep(2000);
+
+            RCInfo.State = CookerProcess.Done;
+            DrawRiceCookerInfo(RCInfo);
+            DrawRiceCookerBodyCooking("취사 완료");
+            Thread.Sleep(500);
+
+            RCInfo.State = CookerProcess.Warming;
+            DrawRiceCookerInfo(RCInfo);
+            DrawRiceCookerBodyWarming("보온");
+
+            return RCInfo;
+        }
+        static void DrawRiceCookerBodyRicing(string title)
+        {
+            DrawBox(RiceCookerBodyX, RiceCookerBodyY, RiceCookerBodyWidth, RiceCookerBodyHeight, title);
+            for (int i = 0; i < RiceCookerBodyHeight - 3; i++)
+            {
+                Console.SetCursorPosition(RiceCookerBodyX + 1, RiceCookerBodyY + 2 + i);
+                Console.Write(new string('⊙', RiceCookerBodyWidth - 2));
+            }
+        }
+        static void DrawRiceCookerBodyRicing(string title, ConsoleColor Color)
+        {
+            DrawBox(RiceCookerBodyX, RiceCookerBodyY, RiceCookerBodyWidth, RiceCookerBodyHeight, title);
+            Console.BackgroundColor = Color;
+
+            for (int i = 0; i < RiceCookerBodyHeight - 3; i++)
+            {
+                Console.SetCursorPosition(RiceCookerBodyX + 1, RiceCookerBodyY + 2 + i);
+                Console.Write(new string('⊙', RiceCookerBodyWidth - 2));
+            }
+
+            Console.BackgroundColor = ConsoleColor.Black;
+        }
+        static void DrawRiceCookerBodyWatering(string title)
+        {
+            DrawRiceCookerBodyRicing(title, ConsoleColor.Blue);
+        }
+        static void DrawRiceCookerBodyWashing(string title)
+        {
+            DrawBox(RiceCookerBodyX, RiceCookerBodyY, RiceCookerBodyWidth, RiceCookerBodyHeight, title);
+            Console.BackgroundColor = ConsoleColor.Blue;
+
+            for (int i = 0; i < RiceCookerBodyHeight - 3; i++)
+            {
+                Console.SetCursorPosition(RiceCookerBodyX + 1, RiceCookerBodyY + 2 + i);
+                Console.Write(new string(i % 2 == 0 ? '~' : '⊙', RiceCookerBodyWidth - 2));
+            }
+
+            Console.BackgroundColor = ConsoleColor.Black;
+        }
+        static void DrawRiceCookerBodyFlushing(string title)
+        {
+            DrawRiceCookerBodyWatering(title);
+            for (int i = 0; i < RiceCookerBodyHeight - 3; i++)
+            {
+                Console.SetCursorPosition(RiceCookerBodyX + 1, RiceCookerBodyY + 2 + i);
+                Console.Write(new string('⊙', RiceCookerBodyWidth - 2));
+                Thread.Sleep(200);
+            }
+        }
+        static void DrawRiceCookerBodyCooking(string title)
+        {
+            DrawRiceCookerBodyRicing(title, ConsoleColor.Red);
+        }
+        static void DrawRiceCookerBodyWarming(string title)
+        {
+            DrawBox(RiceCookerBodyX, RiceCookerBodyY, RiceCookerBodyWidth, RiceCookerBodyHeight, title);
+            Console.ForegroundColor = ConsoleColor.Red;
+
+            for (int i = 0; i < RiceCookerBodyHeight - 3; i++)
+            {
+                Console.SetCursorPosition(RiceCookerBodyX + 1, RiceCookerBodyY + 2 + i);
+                Console.Write(new string('⊙', RiceCookerBodyWidth - 2));
+            }
+
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
 
         static void Test()
         {
