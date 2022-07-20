@@ -33,6 +33,9 @@ namespace Smart_Cooker
         public const int MenuWidth = RiceCookerWidth;
         public const int MenuHeight = 15;
 
+        public const int MenuItemsX = MenuX + ((InfoWidth - MenuItemPadding - 1) / 2);
+        public const int MenuItemsY = MenuY + 4;
+
         public const int RiceCookerBodyX = RiceCookerX + 25;
         public const int RiceCookerBodyY = RiceCookerY + 13;
         public const int RiceCookerBodyWidth = 30;
@@ -77,27 +80,28 @@ namespace Smart_Cooker
             string[] MenuItemsKor = { "전원", "뚜껑", "취사", "보온", "밥먹기", "인원수", "쌀", "물", "종료" };
 
             //Test();
-            DrawBox(RiceCookerX, RiceCookerY, RiceCookerWidth, RiceCookerHeight, "스마트 밥솥");
-            DrawRiceCookerBody("밥솥");
-            DrawRiceCookerCover(RCInfo.IsCoverOpen);
-            DrawPowerLine(RCInfo.Power);
+            DrawOutFrame(RCInfo);
 
-            DrawBox(RiceX, RiceY, RiceWidth, RiceHeight, "쌀통");
-            DrawBox(WaterX, WaterY, WaterWidth, WaterHeight, "물통");
-            DrawRice(RCInfo.Rice);
-            DrawWater(RCInfo.Water);
-
-            DrawBox(InfoX, InfoY, InfoWidth, InfoHeight, "밥솥 정보");
-            DrawRiceCookerInfo(RCInfo);
-            DrawBox(MenuX, MenuY, MenuWidth, MenuHeight, "메뉴");
+            Thread CookThread = new((RCInfo_) =>
+            {
+                RCInfo = Cook(RCInfo_);
+                DrawOutFrame(RCInfo);
+                DrawMenuItems(MenuItemsKor);
+            });
 
             do
             {
-                DrawMenu(MenuX + ((InfoWidth - MenuItemPadding - 1) / 2), MenuY + 4, MenuItemsKor);
+                DrawMenu(MenuItemsKor);
 
                 switch (MainMenuIndex)
                 {
                     case MenuItems.Power:
+                        if (CookThread.IsAlive)
+                        {
+                            DrawMessageBox("취사중입니다.");
+                            break;
+                        }
+
                         RCInfo.Power = !RCInfo.Power;
                         if (RCInfo.State == CookerProcess.Warming)
                         {
@@ -108,7 +112,7 @@ namespace Smart_Cooker
                         DrawPowerLine(RCInfo.Power);
                         break;
                     case MenuItems.Cover:
-                        if (RCInfo.State == CookerProcess.Cooking)
+                        if (CookThread.IsAlive)
                         {
                             DrawMessageBox("취사중에는 뚜껑을 열 수 없습니다.");
                             break;
@@ -128,14 +132,9 @@ namespace Smart_Cooker
                             DrawMessageBox("전원이 꺼져 있습니다.");
                             break;
                         }
-                        if (RCInfo.IsCoverOpen)
+                        if (CookThread.IsAlive)
                         {
-                            DrawMessageBox("뚜껑이 열려 있습니다.");
-                            break;
-                        }
-                        if (RCInfo.Count == 0)
-                        {
-                            DrawMessageBox("인원수를 입력해 주세요.");
+                            DrawMessageBox("취사중입니다.");
                             break;
                         }
                         if (!RCInfo.isEmpty)
@@ -143,13 +142,24 @@ namespace Smart_Cooker
                             DrawMessageBox("밥이 있습니다.");
                             break;
                         }
+                        if (RCInfo.Count == 0)
+                        {
+                            DrawMessageBox("인원수를 입력해 주세요.");
+                            break;
+                        }
 
-                        RCInfo = Cook(RCInfo);
+                        RCInfo.State = CookerProcess.Ricing;
+                        CookThread.Start(RCInfo);
                         break;
                     case MenuItems.Warm:
                         if (!RCInfo.Power)
                         {
                             DrawMessageBox("전원이 꺼져 있습니다.");
+                            break;
+                        }
+                        if (CookThread.IsAlive)
+                        {
+                            DrawMessageBox("취사중입니다.");
                             break;
                         }
                         if (RCInfo.IsCoverOpen)
@@ -166,7 +176,7 @@ namespace Smart_Cooker
                         if (RCInfo.State == CookerProcess.Warming)
                         {
                             RCInfo.State = CookerProcess.None;
-                            DrawRiceCookerBodyRicing("밥솥");
+                            DrawRiceCookerBodyRicing("대기 중");
                         }
                         else
                         {
@@ -175,6 +185,11 @@ namespace Smart_Cooker
                         }
                         break;
                     case MenuItems.Eat:
+                        if (CookThread.IsAlive)
+                        {
+                            DrawMessageBox("취사중입니다.");
+                            break;
+                        }
                         if (!RCInfo.IsCoverOpen)
                         {
                             DrawMessageBox("뚜껑이 닫혀 있습니다.");
@@ -195,6 +210,11 @@ namespace Smart_Cooker
                             DrawMessageBox("전원이 꺼져 있습니다.");
                             break;
                         }
+                        if (CookThread.IsAlive)
+                        {
+                            DrawMessageBox("취사중입니다.");
+                            break;
+                        }
 
                         int Count;
                         if (int.TryParse(DrawMessageBox("인원수 입력: "), out Count))
@@ -203,6 +223,12 @@ namespace Smart_Cooker
                         }
                         break;
                     case MenuItems.Rice:
+                        if (CookThread.IsAlive)
+                        {
+                            DrawMessageBox("취사중입니다.");
+                            break;
+                        }
+
                         int Rice;
                         if (int.TryParse(DrawMessageBox("추가할 쌀(kg): "), out Rice))
                         {
@@ -211,6 +237,12 @@ namespace Smart_Cooker
                         }
                         break;
                     case MenuItems.Water:
+                        if (CookThread.IsAlive)
+                        {
+                            DrawMessageBox("취사중입니다.");
+                            break;
+                        }
+
                         int Water;
                         if (int.TryParse(DrawMessageBox("추가할 물(리터): "), out Water))
                         {
@@ -226,26 +258,14 @@ namespace Smart_Cooker
             Console.SetCursorPosition(0, WindowHeight - 2);
         }
 
-        private static void DrawMenu(int x, int y, string[] MenuItems)
+        static void DrawMenu(string[] MenuItems)
         {
             ConsoleKeyInfo InputKey;
             ConsoleKey[] QuitKeys = { ConsoleKey.Enter, ConsoleKey.Escape };
 
             do
             {
-                foreach (var (MenuItem, i) in MenuItems.Select((v, i) => (v, i)))
-                {
-                    if ((int)MainMenuIndex == i)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Yellow;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                    }
-                    Console.SetCursorPosition(x, y + i);
-                    Console.Write(CenteredString(MenuItem, MenuItemPadding));
-
-                    Console.BackgroundColor = ConsoleColor.Black;
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
+                DrawMenuItems(MenuItems);
 
                 InputKey = Console.ReadKey(true);
 
@@ -262,6 +282,22 @@ namespace Smart_Cooker
                         break;
                 }
             } while (!QuitKeys.Contains(InputKey.Key));
+        }
+        static void DrawMenuItems(string[] MenuItems)
+        {
+            foreach (var (MenuItem, i) in MenuItems.Select((v, i) => (v, i)))
+            {
+                if ((int)MainMenuIndex == i)
+                {
+                    Console.BackgroundColor = ConsoleColor.Yellow;
+                    Console.ForegroundColor = ConsoleColor.Black;
+                }
+                Console.SetCursorPosition(MenuItemsX, MenuItemsY + i);
+                Console.Write(CenteredString(MenuItem, MenuItemPadding));
+
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.White;
+            }
         }
 
         static string CenteredString(string str, int width)
@@ -332,6 +368,36 @@ namespace Smart_Cooker
             }
         }
 
+        static void DrawOutFrame(RiceCookerInfo RCInfo)
+        {
+            DrawBox(RiceCookerX, RiceCookerY, RiceCookerWidth, RiceCookerHeight, "스마트 밥솥");
+            if (RCInfo.isEmpty)
+            {
+                DrawRiceCookerBody("밥솥");
+            }
+            else
+            {
+                if (RCInfo.State == CookerProcess.Warming)
+                {
+                    DrawRiceCookerBodyWarming("보온");
+                }
+                else
+                {
+                    DrawRiceCookerBodyRicing("대기 중");
+                }
+            }
+            DrawRiceCookerCover(RCInfo.IsCoverOpen);
+            DrawPowerLine(RCInfo.Power);
+
+            DrawBox(RiceX, RiceY, RiceWidth, RiceHeight, "쌀통");
+            DrawBox(WaterX, WaterY, WaterWidth, WaterHeight, "물통");
+            DrawRice(RCInfo.Rice);
+            DrawWater(RCInfo.Water);
+
+            DrawBox(InfoX, InfoY, InfoWidth, InfoHeight, "밥솥 정보");
+            DrawRiceCookerInfo(RCInfo);
+            DrawBox(MenuX, MenuY, MenuWidth, MenuHeight, "메뉴");
+        }
         static void DrawRice(int Amount_)
         {
             ClearBox(RiceX + 1, RiceY + 2, RiceWidth - 2, RiceHeight - 3);
@@ -431,9 +497,11 @@ namespace Smart_Cooker
             return Input ?? "";
         }
 
-        static RiceCookerInfo Cook(RiceCookerInfo RCInfo)
+        static RiceCookerInfo Cook(object RCInfo_)
         {
+            RiceCookerInfo RCInfo = (RiceCookerInfo)RCInfo_;
             int Rice = RCInfo.Rice - (RCInfo.Count * RicePerPerson);
+
             if (Rice < 0)
             {
                 DrawMessageBox("쌀을 보충해주세요.");
@@ -447,7 +515,6 @@ namespace Smart_Cooker
 
             DrawWater(RCInfo.Water);
 
-            RCInfo.State = CookerProcess.Ricing;
             RCInfo.Rice = Rice;
             RCInfo.IsCoverOpen = true;
             RCInfo.isEmpty = false;
