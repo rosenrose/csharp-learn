@@ -150,6 +150,12 @@ namespace Smart_Cooker
 
                         RCInfo.State = CookerProcess.Ricing;
                         CookThread.Start(RCInfo);
+                        CookThread = new((RCInfo_) =>
+                        {
+                            RCInfo = Cook(RCInfo_);
+                            DrawOutFrame(RCInfo);
+                            DrawMenuItems(MenuItemsKor);
+                        });
                         break;
                     case MenuItems.Warm:
                         if (!RCInfo.Power)
