@@ -27,7 +27,7 @@ namespace ConsoleApp1
             var options = new JsonSerializerOptions
             {
                 //WriteIndented = true,
-                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.HangulSyllables, UnicodeRanges.HangulCompatibilityJamo)
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.All)
             };
             File.WriteAllText("test.txt", JsonSerializer.Serialize(list, options));
 
