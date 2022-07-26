@@ -19,15 +19,15 @@ namespace ConsoleApp1
             public string this[string index]
             {
                 get => $"{str} + {index}";
-                set => str = index.ToUpper() + index;
+                set => str = index.ToUpper() + value;
             }
         }
         class C
         {
             ArrayList arrayList = new();
-            public string? this[int index]
+            public object? this[int index]
             {
-                get => index < 0 || index >= arrayList.Count ? null : (string?)arrayList[index];
+                get => index < 0 || index >= arrayList.Count ? null : arrayList[index];
                 set
                 {
                     if (index < 0 || index > arrayList.Count)
@@ -56,9 +56,9 @@ namespace ConsoleApp1
             Console.WriteLine(b["foo"]);
 
             C c = new();
-            c[0] = "zz";
-            c[1] = "ab";
-            c[2] = "foo";
+            c[0] = 12;
+            c[1] = "foo";
+            c[2] = true;
 
             c[1] = "bar";
             Console.WriteLine($"{c[0]} {c[1]} {c[2]}");
