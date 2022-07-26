@@ -1,41 +1,67 @@
+using System.Collections;
+
 namespace ConsoleApp1
 {
     internal class Program
     {
-        class Date
+        class A
         {
-            private int Year;
-            private int month;
-            public int Month
+            private int[] number = new int[5];
+            public int this[int index]
             {
-                get => month * 2;
-                set => month = value - 1;
+                get => number[index];
+                set => number[index] = value;
             }
-            public int Day { get; set; } = 20;
-            public int Hour { get; }
-            public int Minute;
-            public void Print()
-            {
-                Console.WriteLine($"{Year} {Month} {Day}");
-            }
-            public Date(int day, int min) => Day = day;
         }
-        class Date2
+        class B
         {
-            public int Year { get; set; }
-            public int Month { get; set; }
+            private string str;
+            public string this[string index]
+            {
+                get => $"{str} + {index}";
+                set => str = index.ToUpper() + index;
+            }
+        }
+        class C
+        {
+            ArrayList arrayList = new();
+            public string? this[int index]
+            {
+                get => index < 0 || index >= arrayList.Count ? null : (string?)arrayList[index];
+                set
+                {
+                    if (index < 0 || index > arrayList.Count)
+                    {
+                        return;
+                    }
+
+                    if (index == arrayList.Count)
+                    {
+                        arrayList.Add(value);
+                        return;
+                    }
+
+                    arrayList[index] = value;
+                }
+            }
         }
         static void Main(string[] args)
         {
-            Date d = new(min: 10, day: 15);
-            //Console.WriteLine($"{d.Year}");
-            d.Month = 9;
-            Console.WriteLine($"{d.Month} {d.Day}");
-            //d.Hour = 10;
-            d.Month += 1;
-            Console.WriteLine($"{d.Month}");
+            A a = new();
+            a[1] = 3;
+            Console.WriteLine($"{a[0]} {a[1]}");
 
-            Date2 d2 = new Date2 { Month = 20, Year = 30 };
+            B b = new();
+            b["abc"] = "def";
+            Console.WriteLine(b["foo"]);
+
+            C c = new();
+            c[0] = "zz";
+            c[1] = "ab";
+            c[2] = "foo";
+
+            c[1] = "bar";
+            Console.WriteLine($"{c[0]} {c[1]} {c[2]}");
         }
     }
 }
