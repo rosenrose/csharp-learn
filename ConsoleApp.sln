@@ -5,7 +5,9 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{A3ABA4F6-A413-40AA-8635-A729483AA5AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart Cooker", "Smart Cooker\Smart Cooker.csproj", "{44C1FB3C-A546-4065-BCF0-DAD213A90BFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Smart Cooker", "Smart Cooker\Smart Cooker.csproj", "{44C1FB3C-A546-4065-BCF0-DAD213A90BFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{AAA3032A-E09A-4631-B075-B4A44756AF9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{44C1FB3C-A546-4065-BCF0-DAD213A90BFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44C1FB3C-A546-4065-BCF0-DAD213A90BFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44C1FB3C-A546-4065-BCF0-DAD213A90BFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAA3032A-E09A-4631-B075-B4A44756AF9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAA3032A-E09A-4631-B075-B4A44756AF9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAA3032A-E09A-4631-B075-B4A44756AF9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAA3032A-E09A-4631-B075-B4A44756AF9F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

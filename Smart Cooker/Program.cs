@@ -320,21 +320,7 @@ namespace Smart_Cooker
         }
         static int ConsoleLength(string str)
         {
-            int Length = 0;
-
-            foreach (char c in str)
-            {
-                if (c < 128)
-                {
-                    Length += 1;
-                }
-                else if (('ㄱ' <= c && c <= 'ㅎ') || ('가' <= c && c <= '힣'))
-                {
-                    Length += 2;
-                }
-            }
-
-            return Length;
+            return str.Select(c => c < 128 ? 1 : (('ㄱ' <= c && c <= 'ㅎ') || ('가' <= c && c <= '힣')) ? 2 : 1).Sum();
         }
 
         static void DrawBox(int x, int y, int width, int height)
