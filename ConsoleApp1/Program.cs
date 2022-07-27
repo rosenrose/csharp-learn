@@ -1,67 +1,62 @@
-using System.Collections;
-
 namespace ConsoleApp1
 {
     internal class Program
     {
         class A
         {
-            private int[] number = new int[5];
+            private int num;
+            public int Num
+            {
+                get => num; set => num = value;
+            }
+            public void print()
+            {
+                num = 10;
+                Num = 20;
+                Console.WriteLine($"{Num} {Num.GetType()}");
+            }
+            private int[] number = { 1, 2, 3 };
             public int this[int index]
             {
-                get => number[index];
-                set => number[index] = value;
-            }
-        }
-        class B
-        {
-            private string str;
-            public string this[string index]
-            {
-                get => $"{str} + {index}";
-                set => str = index.ToUpper() + value;
-            }
-        }
-        class C
-        {
-            ArrayList arrayList = new();
-            public object? this[int index]
-            {
-                get => index < 0 || index >= arrayList.Count ? null : arrayList[index];
+                get
+                {
+                    if (index < -1 * number.Length || index >= number.Length)
+                    {
+                        throw new IndexOutOfRangeException();
+                    }
+
+                    return index < 0 ? number[index + number.Length] : number[index];
+                }
                 set
                 {
-                    if (index < 0 || index > arrayList.Count)
+                    if (index < -1 * number.Length || index >= number.Length)
                     {
-                        return;
+                        throw new IndexOutOfRangeException();
                     }
 
-                    if (index == arrayList.Count)
+                    if (index < 0)
                     {
-                        arrayList.Add(value);
-                        return;
+                        index += number.Length;
                     }
 
-                    arrayList[index] = value;
+                    number[index] = value;
                 }
             }
         }
+
         static void Main(string[] args)
         {
-            A a = new();
-            a[1] = 3;
-            Console.WriteLine($"{a[0]} {a[1]}");
+            int[,] a = { { 1, 2, }, { 3, 4 } };
+            int[][] b = { new int[] { 1, 2, 3 }, new int[] { 4 } };
 
-            B b = new();
-            b["abc"] = "def";
-            Console.WriteLine(b["foo"]);
+            A[] c = { new(), new(), new() };
+            c[0].print();
 
-            C c = new();
-            c[0] = 12;
-            c[1] = "foo";
-            c[2] = true;
+            c[1][-1] = 10;
+            Console.WriteLine($"{c[1][-2]} {c[1][-1]}");
 
-            c[1] = "bar";
-            Console.WriteLine($"{c[0]} {c[1]} {c[2]}");
+            //c[1][-4] = 99;
+            Console.WriteLine(c[1][3]);
         }
     }
 }
