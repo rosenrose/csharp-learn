@@ -7,7 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Smart Cooker", "Smart Cooker\Smart Cooker.csproj", "{44C1FB3C-A546-4065-BCF0-DAD213A90BFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{AAA3032A-E09A-4631-B075-B4A44756AF9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "test", "test\test.csproj", "{AAA3032A-E09A-4631-B075-B4A44756AF9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsApp1", "WinFormsApp1\WinFormsApp1.csproj", "{02E73088-E806-4A35-8DE0-1C19A9600BA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp1", "WpfApp1\WpfApp1.csproj", "{EDF48013-52EA-4B9D-BEFA-879B5B4F0B3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{AAA3032A-E09A-4631-B075-B4A44756AF9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAA3032A-E09A-4631-B075-B4A44756AF9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAA3032A-E09A-4631-B075-B4A44756AF9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02E73088-E806-4A35-8DE0-1C19A9600BA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02E73088-E806-4A35-8DE0-1C19A9600BA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02E73088-E806-4A35-8DE0-1C19A9600BA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02E73088-E806-4A35-8DE0-1C19A9600BA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDF48013-52EA-4B9D-BEFA-879B5B4F0B3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDF48013-52EA-4B9D-BEFA-879B5B4F0B3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDF48013-52EA-4B9D-BEFA-879B5B4F0B3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDF48013-52EA-4B9D-BEFA-879B5B4F0B3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
