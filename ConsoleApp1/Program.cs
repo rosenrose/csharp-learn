@@ -13,6 +13,23 @@ namespace ConsoleApp1
             {
                 Console.WriteLine("ㅋㅋ");
             }
+
+            public event CustomDelegate EventHandler;
+            public void Print3(string str)
+            {
+                EventHandler(str);
+            }
+        }
+        class B
+        {
+            public void Print(string str)
+            {
+                Console.WriteLine(str);
+            }
+            public void Print2(string str)
+            {
+                Console.WriteLine(str + "hello");
+            }
         }
         static void Main(string[] args)
         {
@@ -26,6 +43,19 @@ namespace ConsoleApp1
             p("a");
             p += a.Print2;
             p("b");
+            p -= a.Print;
+            p("c");
+            Console.WriteLine(p.GetType());
+            p -= a.Print2;
+            //Console.WriteLine(p.GetType());
+
+            B b = new();
+            a.EventHandler += b.Print;
+            a.EventHandler += b.Print2;
+            a.Print3("hello");
+            a.EventHandler -= b.Print;
+            a.EventHandler -= b.Print2;
+            a.Print3("hello");
         }
     }
 }
