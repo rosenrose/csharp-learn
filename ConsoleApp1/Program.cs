@@ -2,60 +2,44 @@ namespace ConsoleApp1
 {
     internal class Program
     {
-        delegate void CustomDelegate(string s);
         class A
         {
-            public void Print(string str)
+            private void PrintPrivate() => Console.WriteLine("A private");
+            protected void PrintProtected() => Console.WriteLine("A protected");
+            public virtual void PrintPublic() => Console.WriteLine("A public");
+            protected int Num;
+            public A(int num)
             {
-                Console.WriteLine(str);
+                Num = num;
+                Console.WriteLine("A Constructor");
             }
-            public void Print2(string _)
-            {
-                Console.WriteLine("ㅋㅋ");
-            }
-
-            public event CustomDelegate EventHandler;
-            public void Print3(string str)
-            {
-                EventHandler(str);
-            }
+            ~A() => Console.WriteLine("A finalizer");
         }
-        class B
+        class B : A
         {
-            public void Print(string str)
+            public override void PrintPublic() => Console.WriteLine("B public");
+            public void Print()
             {
-                Console.WriteLine(str);
+                //PrintPrivate();
+                PrintProtected();
+                PrintPublic();
             }
-            public void Print2(string str)
+            private int Num;
+            public B(int num) : base(num)
             {
-                Console.WriteLine(str + "hello");
+                Num = num - 5;
+                Console.WriteLine($"B Constructor {base.Num} {Num}");
             }
+            ~B() => Console.WriteLine("B finalizer");
         }
         static void Main(string[] args)
         {
-            var del = delegate (int x) { return x * x; };
-            Func<int, int> lambda = x => x * x;
+            B b = new(10);
+            b.Print();
 
-            Console.WriteLine($"{lambda(2)} {del(4)}");
-
-            A a = new();
-            CustomDelegate p = a.Print;
-            p("a");
-            p += a.Print2;
-            p("b");
-            p -= a.Print;
-            p("c");
-            Console.WriteLine(p.GetType());
-            p -= a.Print2;
-            //Console.WriteLine(p.GetType());
-
-            B b = new();
-            a.EventHandler += b.Print;
-            a.EventHandler += b.Print2;
-            a.Print3("hello");
-            a.EventHandler -= b.Print;
-            a.EventHandler -= b.Print2;
-            a.Print3("hello");
+            A a = b;
+            //a.Print();
+            a.PrintPublic();
         }
     }
 }
