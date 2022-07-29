@@ -2,23 +2,22 @@ namespace ConsoleApp1
 {
     internal class Program
     {
-        class A
+        interface I
         {
-            public virtual void Print() => Console.WriteLine("A print");
+            void Print();
         }
-        class B : A
+        interface I2
         {
-            public override void Print() => Console.WriteLine("B print");
-            public int num = 3;
+            void Print();
+        }
+        class A : I, I2
+        {
+            public void Print() => Console.WriteLine("A print");
         }
         static void Main(string[] args)
         {
             A a = new();
             a.Print();
-
-            A a2 = new B();
-            a2.Print();
-            // Console.WriteLine(a2.num);
         }
     }
 }
