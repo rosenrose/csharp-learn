@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Input;
 
 namespace WpfApp1
 {
@@ -17,6 +18,20 @@ namespace WpfApp1
             //Button Button1 = (Button)sender;
             Button1.Content = "Hello";
             MessageBox.Show("Hi");
+        }
+
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            //MessageBox.Show($"{e.Key} | {e.KeyStates} | {e.SystemKey} | {e.ImeProcessedKey} | {Keyboard.Modifiers}");
+            if (e.Key == Key.A && Keyboard.Modifiers == (ModifierKeys.Control | ModifierKeys.Shift))
+            {
+                MessageBox.Show("a");
+            }
+        }
+
+        private void OnKeyUp(object sender, KeyEventArgs e)
+        {
+            MessageBox.Show($"{e.InputSource} | {e.Source} | {e.Device} | {e.KeyboardDevice}");
         }
     }
 }

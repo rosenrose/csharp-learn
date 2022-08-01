@@ -21,5 +21,24 @@ namespace WinFormsApp1
             e.Graphics.DrawEllipse(Pens.SkyBlue, 10, 20, 50, 80);
             e.Graphics.DrawRectangle(Pens.OliveDrab, 100, 30, 90, 80);
         }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            //MessageBox.Show($"{e.KeyCode} | {e.KeyData} | {e.KeyValue} | {e.Modifiers}");
+            if (e.KeyData == (Keys.A | Keys.Control | Keys.Shift))
+            {
+                MessageBox.Show("a");
+            }
+        }
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            //MessageBox.Show("KeyUp");
+        }
+
+        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            //MessageBox.Show("KeyPress");
+        }
     }
 }
