@@ -41,7 +41,6 @@ namespace WinFormsApp1
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.Button1_Click);
-            this.button1.Click += Show;
             // 
             // Form1
             // 
@@ -52,6 +51,7 @@ namespace WinFormsApp1
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.ResumeLayout(false);
 
         }

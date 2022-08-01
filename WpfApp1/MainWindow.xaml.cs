@@ -1,5 +1,4 @@
 using System.Windows;
-using System.Windows.Controls;
 
 namespace WpfApp1
 {
@@ -15,8 +14,8 @@ namespace WpfApp1
 
         private void Button1_Click(object sender, RoutedEventArgs e)
         {
-            Button button1 = (Button)sender;
-            button1.Content = "Hello";
+            //Button Button1 = (Button)sender;
+            Button1.Content = "Hello";
             MessageBox.Show("Hi");
         }
     }
