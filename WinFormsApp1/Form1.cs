@@ -2,7 +2,7 @@ namespace WinFormsApp1
 {
     public partial class Form1 : Form
     {
-        string MouseCoord;
+        List<Point> Points = new();
         public Form1()
         {
             InitializeComponent();
@@ -10,43 +10,26 @@ namespace WinFormsApp1
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
-            MessageBox.Show("Down");
-        }
+            if (Points.Count >= 3)
+            {
+                Points.Clear();
+            }
 
-        private void Form1_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Click");
-        }
-
-        private void Form1_MouseClick(object sender, MouseEventArgs e)
-        {
-            MessageBox.Show("MouseClick");
-        }
-
-        private void button1_MouseDown(object sender, MouseEventArgs e)
-        {
-            //MessageBox.Show("ButtonDown");
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("ButtonClick");
-        }
-
-        private void button1_MouseClick(object sender, MouseEventArgs e)
-        {
-            MessageBox.Show("ButtonMouseClick");
-        }
-
-        private void Form1_MouseMove(object sender, MouseEventArgs e)
-        {
-            MouseCoord = $"X: {e.X}, Y: {e.Y}";
+            Points.Add(new(e.X, e.Y));
             Invalidate();
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.DrawString(MouseCoord, Font, Brushes.Magenta, 10, 10);
+            if (Points.Count < 3)
+            {
+                return;
+            }
+
+            for (int i = 0; i < Points.Count; i++)
+            {
+                e.Graphics.DrawLine(Pens.BlueViolet, Points[i], Points[(i + 1) % 3]);
+            }
         }
     }
 }

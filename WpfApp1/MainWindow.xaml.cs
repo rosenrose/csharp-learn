@@ -1,5 +1,7 @@
-using System.IO;
+using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace WpfApp1
 {
@@ -8,42 +10,47 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
+        List<Point> Points = new();
         public MainWindow()
         {
             InitializeComponent();
-            File.CreateText("test.txt");
         }
 
         private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            //MessageBox.Show("Down");
-            File.AppendAllText("test.txt", "MouseDown\n");
-        }
+            Point point = e.GetPosition(Grid) switch
+            {
+                { X: var x, Y: var y } => new(x, y)
+            };
 
-        private void OnMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            //MessageBox.Show("Up");
-            File.AppendAllText("test.txt", "MouseUp\n");
-        }
+            Points.Add(point);
 
-        private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            TextBlock.Text = $"{e.GetPosition(Grid).X:F2} {e.GetPosition(Grid).Y:F2}";
-        }
+            if (Points.Count < 2)
+            {
+                return;
+            }
 
-        private void OnMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            File.AppendAllText("test.txt", "MouseLeftButtonDown\n");
-        }
+            AddLine(Points[^2], Points[^1]);
 
-        private void OnMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            File.AppendAllText("test.txt", "MouseLeftButtonUp\n");
-        }
+            if (Points.Count >= 3)
+            {
+                AddLine(Points[^1], Points[0]);
+                Points.Clear();
+            }
 
-        private void OnMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        }
+        private void AddLine(Point p1, Point p2)
         {
-            File.AppendAllText("test.txt", "MouseDoubleClick\n");
+            Line line = new()
+            {
+                Stroke = Brushes.BlueViolet,
+                X1 = p1.X,
+                Y1 = p1.Y,
+                X2 = p2.X,
+                Y2 = p2.Y,
+            };
+
+            Canvas.Children.Add(line);
         }
     }
 }

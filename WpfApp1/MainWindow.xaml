@@ -5,10 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" MouseDown="OnMouseDown" MouseUp="OnMouseUp" MouseMove="OnMouseMove"
-        MouseLeftButtonDown="OnMouseLeftButtonDown" MouseLeftButtonUp="OnMouseLeftButtonUp" MouseDoubleClick="OnMouseDoubleClick" >
+        Title="MainWindow" Height="450" Width="800">
     <Grid x:Name="Grid">
-        <TextBlock HorizontalAlignment="Left" Margin="65,47,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"
-                   x:Name="TextBlock"/>
+        <Canvas x:Name="Canvas" Background="Transparent" MouseDown="OnMouseDown"/>
     </Grid>
 </Window>
