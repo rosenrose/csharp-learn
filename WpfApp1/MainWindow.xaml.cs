@@ -1,5 +1,5 @@
+using System.IO;
 using System.Windows;
-using System.Windows.Input;
 
 namespace WpfApp1
 {
@@ -11,27 +11,39 @@ namespace WpfApp1
         public MainWindow()
         {
             InitializeComponent();
+            File.CreateText("test.txt");
         }
 
-        private void Button1_Click(object sender, RoutedEventArgs e)
+        private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            //Button Button1 = (Button)sender;
-            Button1.Content = "Hello";
-            MessageBox.Show("Hi");
+            //MessageBox.Show("Down");
+            File.AppendAllText("test.txt", "MouseDown\n");
         }
 
-        private void OnKeyDown(object sender, KeyEventArgs e)
+        private void OnMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            //MessageBox.Show($"{e.Key} | {e.KeyStates} | {e.SystemKey} | {e.ImeProcessedKey} | {Keyboard.Modifiers}");
-            if (e.Key == Key.A && Keyboard.Modifiers == (ModifierKeys.Control | ModifierKeys.Shift))
-            {
-                MessageBox.Show("a");
-            }
+            //MessageBox.Show("Up");
+            File.AppendAllText("test.txt", "MouseUp\n");
         }
 
-        private void OnKeyUp(object sender, KeyEventArgs e)
+        private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            MessageBox.Show($"{e.InputSource} | {e.Source} | {e.Device} | {e.KeyboardDevice}");
+            TextBlock.Text = $"{e.GetPosition(Grid).X:F2} {e.GetPosition(Grid).Y:F2}";
+        }
+
+        private void OnMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            File.AppendAllText("test.txt", "MouseLeftButtonDown\n");
+        }
+
+        private void OnMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            File.AppendAllText("test.txt", "MouseLeftButtonUp\n");
+        }
+
+        private void OnMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            File.AppendAllText("test.txt", "MouseDoubleClick\n");
         }
     }
 }

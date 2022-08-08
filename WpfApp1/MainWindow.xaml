@@ -5,15 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" KeyDown="OnKeyDown" KeyUp="OnKeyUp">
-    <Grid>
-        <Button x:Name="Button1" Content="Button" HorizontalAlignment="Left" Margin="389,192,0,0" VerticalAlignment="Top" Click="Button1_Click"/>
-        <TextBlock HorizontalAlignment="Left" Margin="94,65,0,0" TextWrapping="Wrap" Text="def" VerticalAlignment="Top" Foreground="#FFFF5200"/>
-        <Ellipse HorizontalAlignment="Left" Height="97" Margin="94,115,0,0" Stroke="Black" VerticalAlignment="Top" Width="54"/>
-        <Rectangle HorizontalAlignment="Left" Height="73" Margin="198,115,0,0" Stroke="Black" VerticalAlignment="Top" Width="100"/>
-        <Canvas Margin="169,41,474,340">
-            <Line X1="10" Y1="10" X2="100" Y2="20" Stroke="Black" StrokeThickness="2" />
-        </Canvas>
-
+        Title="MainWindow" Height="450" Width="800" MouseDown="OnMouseDown" MouseUp="OnMouseUp" MouseMove="OnMouseMove"
+        MouseLeftButtonDown="OnMouseLeftButtonDown" MouseLeftButtonUp="OnMouseLeftButtonUp" MouseDoubleClick="OnMouseDoubleClick" >
+    <Grid x:Name="Grid">
+        <TextBlock HorizontalAlignment="Left" Margin="65,47,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"
+                   x:Name="TextBlock"/>
     </Grid>
 </Window>
