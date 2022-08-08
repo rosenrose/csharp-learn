@@ -10,25 +10,28 @@ namespace WinFormsApp1
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (Points.Count >= 3)
-            {
-                Points.Clear();
-            }
-
             Points.Add(new(e.X, e.Y));
             Invalidate();
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            if (Points.Count < 3)
+            if (Points.Count < 2)
             {
                 return;
             }
 
             for (int i = 0; i < Points.Count; i++)
             {
-                e.Graphics.DrawLine(Pens.BlueViolet, Points[i], Points[(i + 1) % 3]);
+                if (i % 3 >= 1)
+                {
+                    e.Graphics.DrawLine(Pens.BlueViolet, Points[i - 1], Points[i]);
+                }
+
+                if (i % 3 == 2)
+                {
+                    e.Graphics.DrawLine(Pens.BlueViolet, Points[i], Points[i - 2]);
+                }
             }
         }
     }
