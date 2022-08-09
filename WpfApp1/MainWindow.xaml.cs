@@ -1,5 +1,7 @@
-using System.Collections.Generic;
+using System;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -10,7 +12,7 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<Point> Points = new();
+        Point InitPoint, EndPoint;
         public MainWindow()
         {
             InitializeComponent();
@@ -18,39 +20,57 @@ namespace WpfApp1
 
         private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            Point point = e.GetPosition(Grid) switch
+            InitPoint = e.GetPosition(Grid) switch
             {
                 { X: var x, Y: var y } => new(x, y)
             };
 
-            Points.Add(point);
+            AddRectangle(InitPoint, InitPoint);
+        }
 
-            if (Points.Count < 2)
+        private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (e.LeftButton != MouseButtonState.Pressed)
             {
                 return;
             }
 
-            AddLine(Points[^2], Points[^1]);
-
-            if (Points.Count >= 3)
+            if (MainCanvas.Children.Count == 0)
             {
-                AddLine(Points[^1], Points[0]);
-                Points.Clear();
+                return;
             }
 
-        }
-        private void AddLine(Point p1, Point p2)
-        {
-            Line line = new()
+            EndPoint = e.GetPosition(Grid) switch
             {
-                Stroke = Brushes.BlueViolet,
-                X1 = p1.X,
-                Y1 = p1.Y,
-                X2 = p2.X,
-                Y2 = p2.Y,
+                { X: var x, Y: var y } => new(x, y)
             };
 
-            Canvas.Children.Add(line);
+            Rectangle rect = (Rectangle)MainCanvas.Children[^1];
+            rect.Width = Math.Abs(InitPoint.X - EndPoint.X);
+            rect.Height = Math.Abs(InitPoint.Y - EndPoint.Y);
+
+            if (EndPoint.X < InitPoint.X)
+            {
+                Canvas.SetLeft(rect, EndPoint.X);
+            }
+            if (EndPoint.Y < InitPoint.Y)
+            {
+                Canvas.SetTop(rect, EndPoint.Y);
+            }
+        }
+
+        private void AddRectangle(Point p1, Point p2)
+        {
+            Rectangle rect = new()
+            {
+                Stroke = Brushes.BlueViolet,
+                Width = Math.Abs(p1.X - p2.X),
+                Height = Math.Abs(p1.Y - p2.Y),
+            };
+
+            MainCanvas.Children.Add(rect);
+            Canvas.SetLeft(rect, p1.X);
+            Canvas.SetTop(rect, p1.Y);
         }
     }
 }
