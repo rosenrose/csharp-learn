@@ -18,7 +18,7 @@ namespace WpfApp1
             InitializeComponent();
         }
 
-        private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             InitPoint = e.GetPosition(Grid) switch
             {
@@ -28,7 +28,7 @@ namespace WpfApp1
             AddRectangle(InitPoint, InitPoint);
         }
 
-        private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        private void OnMouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton != MouseButtonState.Pressed)
             {
