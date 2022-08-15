@@ -1,4 +1,3 @@
-using System.Drawing;
 using System.Windows;
 
 namespace WpfApp1
@@ -11,8 +10,6 @@ namespace WpfApp1
         public MainWindow()
         {
             InitializeComponent();
-
-            TextBox.Text = $"R: {Color.Coral.R} G: {Color.Coral.G} B: {Color.Coral.B} A: {Color.Coral.A}";
         }
     }
 }

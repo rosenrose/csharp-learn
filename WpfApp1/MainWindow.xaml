@@ -7,12 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid x:Name="Grid">
-        <TextBox x:Name="TextBox" HorizontalAlignment="Left" Margin="100,90,0,0" TextWrapping="Wrap" Text="TextBox"
-                 VerticalAlignment="Top" Width="200" Foreground="Coral"/>
-        <Line X1="0" Y1="0" X2="300" Y2="150" Stroke="Crimson" StrokeThickness="5" StrokeDashArray="3 2 5 4"
-              StrokeDashCap="Triangle" Margin="100,130,400,141" />
-        <Ellipse Margin="441,66,171,250" Fill="DarkSeaGreen"/>
-        <Rectangle HorizontalAlignment="Left" Height="100" Margin="465,238,0,0" Stroke="Black" VerticalAlignment="Top" Width="100"
-                   Fill="DarkOrange"/>
+        <Image HorizontalAlignment="Left" Height="100" Margin="172,108,0,0" VerticalAlignment="Top" Width="100" Source="/image.png"/>
     </Grid>
 </Window>

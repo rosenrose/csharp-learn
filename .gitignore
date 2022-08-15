@@ -353,3 +353,5 @@ test*.*
 log*.*
 *.bin
 *.dat
+*.png
+*.jpg
