@@ -1,8 +1,5 @@
+using System.Drawing;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace WpfApp1
 {
@@ -14,30 +11,8 @@ namespace WpfApp1
         public MainWindow()
         {
             InitializeComponent();
-        }
 
-        private void OnMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            Point point = e.GetPosition(Grid) switch
-            {
-                { X: var x, Y: var y } => new(x, y)
-            };
-
-            AddCircle(point, 100, 100);
-        }
-
-        private void AddCircle(Point point, int width, int height)
-        {
-            Ellipse circle = new()
-            {
-                Stroke = Brushes.Aqua,
-                Width = width,
-                Height = height,
-            };
-
-            MainCanvas.Children.Add(circle);
-            Canvas.SetLeft(circle, point.X - width / 2);
-            Canvas.SetTop(circle, point.Y - height / 2);
+            TextBox.Text = $"R: {Color.Coral.R} G: {Color.Coral.G} B: {Color.Coral.B} A: {Color.Coral.A}";
         }
     }
 }
