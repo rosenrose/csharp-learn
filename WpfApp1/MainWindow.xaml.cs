@@ -1,4 +1,3 @@
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -12,7 +11,6 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
-        Point InitPoint, EndPoint;
         public MainWindow()
         {
             InitializeComponent();
@@ -20,57 +18,26 @@ namespace WpfApp1
 
         private void OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            InitPoint = e.GetPosition(Grid) switch
+            Point point = e.GetPosition(Grid) switch
             {
                 { X: var x, Y: var y } => new(x, y)
             };
 
-            AddRectangle(InitPoint, InitPoint);
+            AddCircle(point, 100, 100);
         }
 
-        private void OnMouseMove(object sender, MouseEventArgs e)
+        private void AddCircle(Point point, int width, int height)
         {
-            if (e.LeftButton != MouseButtonState.Pressed)
+            Ellipse circle = new()
             {
-                return;
-            }
-
-            if (MainCanvas.Children.Count == 0)
-            {
-                return;
-            }
-
-            EndPoint = e.GetPosition(Grid) switch
-            {
-                { X: var x, Y: var y } => new(x, y)
+                Stroke = Brushes.Aqua,
+                Width = width,
+                Height = height,
             };
 
-            Rectangle rect = (Rectangle)MainCanvas.Children[^1];
-            rect.Width = Math.Abs(InitPoint.X - EndPoint.X);
-            rect.Height = Math.Abs(InitPoint.Y - EndPoint.Y);
-
-            if (EndPoint.X < InitPoint.X)
-            {
-                Canvas.SetLeft(rect, EndPoint.X);
-            }
-            if (EndPoint.Y < InitPoint.Y)
-            {
-                Canvas.SetTop(rect, EndPoint.Y);
-            }
-        }
-
-        private void AddRectangle(Point p1, Point p2)
-        {
-            Rectangle rect = new()
-            {
-                Stroke = Brushes.BlueViolet,
-                Width = Math.Abs(p1.X - p2.X),
-                Height = Math.Abs(p1.Y - p2.Y),
-            };
-
-            MainCanvas.Children.Add(rect);
-            Canvas.SetLeft(rect, p1.X);
-            Canvas.SetTop(rect, p1.Y);
+            MainCanvas.Children.Add(circle);
+            Canvas.SetLeft(circle, point.X - width / 2);
+            Canvas.SetTop(circle, point.Y - height / 2);
         }
     }
 }
