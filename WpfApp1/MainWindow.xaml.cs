@@ -1,4 +1,9 @@
+using System;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace WpfApp1
 {
@@ -11,17 +16,27 @@ namespace WpfApp1
         {
             InitializeComponent();
 
-            (Width, Height) = (960, 540);
+            DispatcherTimer timer = new();
+            timer.Interval = TimeSpan.FromSeconds(0.5);
+            timer.Tick += TimerTick;
+            timer.Start();
         }
 
-        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        private void TimerTick(object? sender, EventArgs e)
         {
-            (Width, Height) = (640, 640);
-        }
+            var (Width, Height) = ((int)this.Width, (int)this.Height);
 
-        private void Button2Click(object sender, RoutedEventArgs e)
-        {
-            Button1.Visibility = Button1.IsVisible ? Visibility.Hidden : Visibility.Visible;
+            Random rand = new();
+            Rectangle rect = new()
+            {
+                Width = rand.Next(Width / 2),
+                Height = rand.Next(Height / 2),
+                Stroke = Brushes.DeepSkyBlue
+            };
+            Canvas.SetLeft(rect, rand.Next(Width / 2));
+            Canvas.SetTop(rect, rand.Next(Height / 2));
+
+            MainCanvas.Children.Add(rect);
         }
     }
 }
