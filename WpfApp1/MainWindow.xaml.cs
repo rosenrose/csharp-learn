@@ -10,24 +10,18 @@ namespace WpfApp1
         public MainWindow()
         {
             InitializeComponent();
+
+            (Width, Height) = (960, 540);
         }
 
-        private void OnLoad(object sender, RoutedEventArgs e)
+        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            MessageBox.Show("Load");
+            (Width, Height) = (640, 640);
         }
 
-        private void OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Button2Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("Closing", "Close?", MessageBoxButton.YesNo) == MessageBoxResult.No)
-            {
-                e.Cancel = true;
-            }
-        }
-
-        private void OnClose(object sender, System.EventArgs e)
-        {
-            MessageBox.Show("Closed");
+            Button1.Visibility = Button1.IsVisible ? Visibility.Hidden : Visibility.Visible;
         }
     }
 }

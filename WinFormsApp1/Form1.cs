@@ -5,24 +5,38 @@ namespace WinFormsApp1
         public Form1()
         {
             InitializeComponent();
+
+            Size = new(640, 480);
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void Form1_Resize(object sender, EventArgs e)
         {
-            MessageBox.Show("Load");
+            //Control control = (Control)sender;
+            //control.Size = new(500, 500);
+
+            Size = new(500, 500);
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void Form1_SizeChanged(object sender, EventArgs e)
         {
-            if (MessageBox.Show($"Closing: {e.CloseReason}", "Close?", MessageBoxButtons.YesNo) == DialogResult.No)
+            //Size = new(500, 500);
+        }
+
+        private void Form1_Layout(object sender, LayoutEventArgs e)
+        {
+            MessageBox.Show("layout");
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (button1.Visible)
             {
-                e.Cancel = true;
+                button1.Hide();
             }
-        }
-
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            MessageBox.Show($"Closed: {e.CloseReason}");
+            else
+            {
+                button1.Show();
+            }
         }
     }
 }
