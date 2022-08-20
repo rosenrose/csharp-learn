@@ -11,8 +11,4 @@
     <None Remove="image.png" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="image.png" />
-  </ItemGroup>
-
 </Project>

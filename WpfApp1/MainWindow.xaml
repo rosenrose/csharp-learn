@@ -5,8 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid x:Name="Grid">
-        <Image HorizontalAlignment="Left" Height="100" Margin="172,108,0,0" VerticalAlignment="Top" Width="100" Source="/image.png"/>
-    </Grid>
+        Title="MainWindow" Height="450" Width="800" Loaded="OnLoad" Closing="OnClosing" Closed="OnClose">
+    <Grid x:Name="Grid"/>
 </Window>
