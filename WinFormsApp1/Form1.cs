@@ -2,25 +2,29 @@ namespace WinFormsApp1
 {
     public partial class Form1 : Form
     {
-        Bitmap bitmap;
+        BufferedGraphicsContext ctx;
+        BufferedGraphics graphics;
+        Image image;
         public Form1()
         {
             InitializeComponent();
 
-            bitmap = new(400, 300);
-            SetClientSizeCore(400, 300);
+            ctx = BufferedGraphicsManager.Current;
+            image = Properties.Resources.image;
+            ctx.MaximumBuffer = new(image.Width * 2, image.Height * 2);
+            graphics = ctx.Allocate(CreateGraphics(), new(0, 0, image.Width * 2, image.Height * 2));
+            graphics.Graphics.Clear(Color.Blue);
+            SetClientSizeCore(image.Width * 2, image.Height * 2);
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            //Image imgage = Image.FromFile("image.png");
-            Graphics graphics = Graphics.FromImage(bitmap);
-            graphics.Clear(Color.Yellow);
-
-            graphics.DrawString("C#", Font, Brushes.Black, 10, 10);
-            graphics.DrawRectangle(Pens.Red, 100, 10, 200, 100);
-
-            e.Graphics.DrawImage(bitmap, 0, 0);
+            Random rand = new();
+            for (int i = 0; i < 10; i++)
+            {
+                graphics.Graphics.DrawImage(image, rand.Next(image.Width), rand.Next(image.Height));
+            }
+            graphics.Render(e.Graphics);
         }
     }
 }
