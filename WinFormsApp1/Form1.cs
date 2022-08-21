@@ -7,13 +7,14 @@ namespace WinFormsApp1
             InitializeComponent();
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            Random rand = new();
-            Rectangle rect = new(rand.Next(Width / 3), rand.Next(Height / 3), rand.Next(Width / 2), rand.Next(Height / 2));
+            MessageBox.Show("Open");
+        }
 
-            using Graphics g = CreateGraphics();
-            g.DrawRectangle(Pens.Chocolate, rect);
+        private void optionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Option");
         }
     }
 }

@@ -6,7 +6,28 @@
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.CommandBindings>
+        <CommandBinding Command="Open" Executed="OpenClick"/>
+    </Window.CommandBindings>
+    <Window.ContextMenu>
+        <ContextMenu>
+            <MenuItem Header="Option" Click="OptionClick"/>
+            <Separator/>
+            <MenuItem Header="Edit"/>
+        </ContextMenu>
+    </Window.ContextMenu>
     <Grid x:Name="MainGrid">
-        <Canvas x:Name="MainCanvas" Background="Transparent"/>
+        <Menu Height="20" Width="800" VerticalAlignment="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="Open" InputGestureText="Ctrl+O" Command="Open"/>
+                <MenuItem Header="Save" InputGestureText="Ctrl+S"/>
+                <MenuItem Header="Save As" InputGestureText="A"/>
+                <MenuItem Header="Close" InputGestureText="Alt+F4"/>
+            </MenuItem>
+            <MenuItem Header="View">
+                <MenuItem Header="Item"/>
+            </MenuItem>
+        </Menu>
     </Grid>
 </Window>
+
