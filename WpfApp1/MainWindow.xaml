@@ -6,28 +6,18 @@
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Window.CommandBindings>
-        <CommandBinding Command="Open" Executed="OpenClick"/>
-    </Window.CommandBindings>
-    <Window.ContextMenu>
-        <ContextMenu>
-            <MenuItem Header="Option" Click="OptionClick"/>
-            <Separator/>
-            <MenuItem Header="Edit"/>
-        </ContextMenu>
-    </Window.ContextMenu>
     <Grid x:Name="MainGrid">
-        <Menu Height="20" Width="800" VerticalAlignment="Top">
-            <MenuItem Header="File">
-                <MenuItem Header="Open" InputGestureText="Ctrl+O" Command="Open"/>
-                <MenuItem Header="Save" InputGestureText="Ctrl+S"/>
-                <MenuItem Header="Save As" InputGestureText="A"/>
-                <MenuItem Header="Close" InputGestureText="Alt+F4"/>
-            </MenuItem>
-            <MenuItem Header="View">
-                <MenuItem Header="Item"/>
-            </MenuItem>
-        </Menu>
+        <Button Content="Button1" x:Name="Button1" HorizontalAlignment="Left" Margin="224,136,0,0" VerticalAlignment="Top"
+                Click="OnButtonClick"/>
+        <Button Content="Button2" x:Name="Button2" HorizontalAlignment="Left" Margin="322,136,0,0" VerticalAlignment="Top"/>
+        <CheckBox Content="CheckBox1" x:Name="CheckBox1" HorizontalAlignment="Left" Margin="198,187,0,0" VerticalAlignment="Top"
+                  Checked="OnCheckBoxChecked" IsThreeState="True" Unchecked="OnCheckBoxUnchecked"/>
+        <CheckBox Content="CheckBox2" x:Name="CheckBox2" HorizontalAlignment="Left" Margin="302,187,0,0" VerticalAlignment="Top"/>
+        <RadioButton Content="RadioButton1" x:Name="RadioButton1" GroupName="Group1" HorizontalAlignment="Left" Margin="198,232,0,0" VerticalAlignment="Top"
+                     Checked="OnRadioButtonChecked" IsThreeState="True" Unchecked="OnRadioButtonUnchecked"/>
+        <RadioButton Content="RadioButton2" x:Name="RadioButton2" GroupName="Group1" HorizontalAlignment="Left" Margin="198,273,0,0" VerticalAlignment="Top"/>
+        <RadioButton Content="RadioButton3" x:Name="RadioButton3" GroupName="Group2" HorizontalAlignment="Left" Margin="302,232,0,0" VerticalAlignment="Top"/>
+        <RadioButton Content="RadioButton4" x:Name="RadioButton4" GroupName="Group2" HorizontalAlignment="Left" Margin="302,276,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
 

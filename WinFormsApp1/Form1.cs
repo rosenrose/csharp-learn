@@ -7,14 +7,20 @@ namespace WinFormsApp1
             InitializeComponent();
         }
 
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Open");
+            string msg = $"check1: {checkBox1.Checked}, check2: {checkBox2.CheckState}";
+            MessageBox.Show(msg);
         }
 
-        private void optionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            MessageBox.Show("Option");
+            MessageBox.Show(((CheckBox)sender).Checked.ToString());
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            MessageBox.Show(((RadioButton)sender).Checked.ToString());
         }
     }
 }
