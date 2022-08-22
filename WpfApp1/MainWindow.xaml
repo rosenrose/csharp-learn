@@ -7,17 +7,30 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid x:Name="MainGrid">
-        <Button Content="Button1" x:Name="Button1" HorizontalAlignment="Left" Margin="224,136,0,0" VerticalAlignment="Top"
-                Click="OnButtonClick"/>
-        <Button Content="Button2" x:Name="Button2" HorizontalAlignment="Left" Margin="322,136,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="CheckBox1" x:Name="CheckBox1" HorizontalAlignment="Left" Margin="198,187,0,0" VerticalAlignment="Top"
-                  Checked="OnCheckBoxChecked" IsThreeState="True" Unchecked="OnCheckBoxUnchecked"/>
-        <CheckBox Content="CheckBox2" x:Name="CheckBox2" HorizontalAlignment="Left" Margin="302,187,0,0" VerticalAlignment="Top"/>
-        <RadioButton Content="RadioButton1" x:Name="RadioButton1" GroupName="Group1" HorizontalAlignment="Left" Margin="198,232,0,0" VerticalAlignment="Top"
-                     Checked="OnRadioButtonChecked" IsThreeState="True" Unchecked="OnRadioButtonUnchecked"/>
-        <RadioButton Content="RadioButton2" x:Name="RadioButton2" GroupName="Group1" HorizontalAlignment="Left" Margin="198,273,0,0" VerticalAlignment="Top"/>
-        <RadioButton Content="RadioButton3" x:Name="RadioButton3" GroupName="Group2" HorizontalAlignment="Left" Margin="302,232,0,0" VerticalAlignment="Top"/>
-        <RadioButton Content="RadioButton4" x:Name="RadioButton4" GroupName="Group2" HorizontalAlignment="Left" Margin="302,276,0,0" VerticalAlignment="Top"/>
+        <Label Content="TextBox" HorizontalAlignment="Left" Margin="226,30,0,0" VerticalAlignment="Top"/>
+        <Label Content="TextBlock" HorizontalAlignment="Left" Margin="226,74,0,0" VerticalAlignment="Top"/>
+        <Label Content="RichTextBox" HorizontalAlignment="Left" Margin="226,138,0,0" VerticalAlignment="Top"/>
+        <Label Content="PasswordBox" HorizontalAlignment="Left" Margin="226,266,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Margin="310,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"
+                 TextChanged="TextBox_TextChanged"/>
+        <TextBox HorizontalAlignment="Left" Margin="449,34,0,0" TextWrapping="Wrap" Text="read only&#xD;&#xA;multiline" VerticalAlignment="Top" Width="120"
+                 IsReadOnly="True"/>
+        <TextBlock HorizontalAlignment="Left" Margin="310,80,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="45" Width="120">
+            This is <Bold>Pink</Bold> TextBox
+            <LineBreak/>
+            hello
+            <LineBreak/>
+            <Run Background="blue">blue</Run>
+        </TextBlock>
+        <RichTextBox Margin="309,143,250,184">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text="RichTextBox"/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+        <PasswordBox HorizontalAlignment="Left" Margin="310,274,0,0" VerticalAlignment="Top" Width="120"
+                     PasswordChar="#"/>
     </Grid>
 </Window>
 
