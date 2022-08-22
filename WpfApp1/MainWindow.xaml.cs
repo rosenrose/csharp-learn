@@ -1,6 +1,7 @@
-using System.Linq;
+using System;
 using System.Windows;
 using System.Windows.Controls;
+using Xceed.Wpf.Toolkit;
 
 namespace WpfApp1
 {
@@ -9,27 +10,52 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
+        string[] Items = { "apple", "banana", "grape", "peach" };
         public MainWindow()
         {
             InitializeComponent();
+
+            label.Content = Items[0];
         }
 
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            ComboBox comboBox = (ComboBox)sender;
-            MessageBox.Show($"{comboBox.SelectedIndex} {comboBox.Text} {comboBox.SelectedItem}");
+            Label1.Content = $"x: {e.NewValue}";
         }
 
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ScrollBar_ValueChanged_1(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            ListBox listBox = (ListBox)sender;
-            MessageBox.Show($"{listBox.SelectedIndex} {listBox.SelectedItem}");
+            Label2.Content = $"x: {e.NewValue}";
         }
 
-        private void ListBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            ListBox listBox = (ListBox)sender;
-            MessageBox.Show(string.Join('\n', listBox.SelectedItems.Cast<ListBoxItem>().Select(i => i.Content)));
+            Label3.Content = e.NewValue;
+        }
+
+        private void Updown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            Label3.Content = e.NewValue;
+        }
+
+        private void ButtonSpinner_Spin(object sender, Xceed.Wpf.Toolkit.SpinEventArgs e)
+        {
+            ButtonSpinner spinner = (ButtonSpinner)sender;
+            Label label = (Label)spinner.Content;
+            string? value = label.Content.ToString();
+
+            int index = string.IsNullOrEmpty(value) ? 0 : Array.IndexOf(Items, value);
+
+            if (e.Direction == SpinDirection.Increase)
+            {
+                index = index > 0 ? index - 1 : index;
+            }
+            else
+            {
+                index = index < Items.Length - 1 ? index + 1 : index;
+            }
+
+            label.Content = Items[index];
         }
     }
 }

@@ -7,22 +7,30 @@ namespace WinFormsApp1
             InitializeComponent();
         }
 
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
-            ComboBox comboBox = (ComboBox)sender;
-            MessageBox.Show($"{comboBox.SelectedIndex} {comboBox.Text} {comboBox.SelectedItem}");
+            label1.Text = $"x: {e.NewValue}";
         }
 
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
-            ListBox listBox = (ListBox)sender;
-            MessageBox.Show($"{listBox.SelectedIndex} {listBox.Text} {listBox.SelectedItem}");
+            label2.Text = $"y: {e.NewValue}";
         }
 
-        private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
+        private void trackBar1_Scroll(object sender, EventArgs e)
         {
-            ListBox listBox = (ListBox)sender;
-            MessageBox.Show(string.Join('\n', listBox.SelectedItems.Cast<string>()));
+            label3.Text = ((TrackBar)sender).Value.ToString();
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            label3.Text = ((NumericUpDown)sender).Value.ToString();
+        }
+
+        private void domainUpDown1_SelectedItemChanged(object sender, EventArgs e)
+        {
+            DomainUpDown upDown = (DomainUpDown)sender;
+            label3.Text = $"{upDown.SelectedIndex}, text: {upDown.Text}, item: {upDown.SelectedItem}";
         }
     }
 }
