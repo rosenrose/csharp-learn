@@ -7,9 +7,22 @@ namespace WinFormsApp1
             InitializeComponent();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            MessageBox.Show(((TextBox)sender).Text);
+            ComboBox comboBox = (ComboBox)sender;
+            MessageBox.Show($"{comboBox.SelectedIndex} {comboBox.Text} {comboBox.SelectedItem}");
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ListBox listBox = (ListBox)sender;
+            MessageBox.Show($"{listBox.SelectedIndex} {listBox.Text} {listBox.SelectedItem}");
+        }
+
+        private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ListBox listBox = (ListBox)sender;
+            MessageBox.Show(string.Join('\n', listBox.SelectedItems.Cast<string>()));
         }
     }
 }
