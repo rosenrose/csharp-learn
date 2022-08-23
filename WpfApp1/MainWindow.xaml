@@ -9,6 +9,7 @@
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
         <local:DateTimeConverter x:Key="DTConverter"/>
+        <local:CalendarConverter x:Key="CalendarConverter"/>
     </Window.Resources>
     <Grid x:Name="MainGrid">
         <Button Content="Button" VerticalAlignment="Top" Click="Button_Click" Margin="38,37,693,0"/>
@@ -27,11 +28,13 @@
             </TextBlock.Text>
         </TextBlock>
         <Calendar x:Name="Calendar1" HorizontalAlignment="Left" Margin="292,68,0,0" VerticalAlignment="Top"
-                  SelectionMode="SingleRange"/>
+                  SelectionMode="SingleRange" SelectedDatesChanged="OnSelectedDatesChanged1"/>
         <Calendar x:Name="Calendar2" HorizontalAlignment="Left" Margin="508,68,0,0" VerticalAlignment="Top"
-                  SelectionMode="MultipleRange" FirstDayOfWeek="Monday"/>
-        <ListBox Margin="292,245,340,10" ItemsSource="{Binding ElementName=Calendar1, Path=SelectedDates}"/>
-        <ListBox Margin="508,245,124,10" ItemsSource="{Binding ElementName=Calendar2, Path=SelectedDates}"/>
+                  SelectionMode="MultipleRange" FirstDayOfWeek="Monday" SelectedDatesChanged="OnSelectedDatesChanged2"/>
+        <ListBox x:Name="ListBox1" Margin="292,245,340,10"
+                 ItemsSource="{Binding ElementName=Calendar1, Path=SelectedDates, Converter={StaticResource ResourceKey=CalendarConverter}}"/>
+        <ListBox x:Name="ListBox2" Margin="508,245,124,10"
+                 ItemsSource="{Binding SelectedDates}"/>
     </Grid>
 </Window>
 

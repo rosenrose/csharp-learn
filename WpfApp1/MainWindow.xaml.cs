@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Threading;
 
@@ -31,6 +34,8 @@ namespace WpfApp1
                 }
             }
         }
+        public ObservableCollection<string> SelectedDates { get; set; } = new();
+
         private DispatcherTimer timer = new()
         {
             Interval = TimeSpan.FromSeconds(0.01)
@@ -65,6 +70,21 @@ namespace WpfApp1
 
             Progress++;
         }
+
+        private void OnSelectedDatesChanged1(object sender, SelectionChangedEventArgs e)
+        {
+            ListBox1.GetBindingExpression(ItemsControl.ItemsSourceProperty).UpdateTarget();
+        }
+
+        private void OnSelectedDatesChanged2(object sender, SelectionChangedEventArgs e)
+        {
+            SelectedDates.Clear();
+
+            foreach (DateTime dateTime in Calendar2.SelectedDates)
+            {
+                SelectedDates.Add(dateTime.ToShortDateString());
+            }
+        }
     }
 
     public class DateTimeConverter : IMultiValueConverter
@@ -78,6 +98,25 @@ namespace WpfApp1
             return $"{Date} / {Time}";
         }
         public object[] ConvertBack(object value, Type[] targetTypes, object param, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class CalendarConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object param, CultureInfo culture)
+        {
+            List<string> SelectedDates = new();
+
+            foreach (DateTime dateTime in (SelectedDatesCollection)value)
+            {
+                SelectedDates.Add(dateTime.ToLongDateString());
+            }
+
+            return SelectedDates;
+        }
+        public object ConvertBack(object value, Type targetType, object param, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
