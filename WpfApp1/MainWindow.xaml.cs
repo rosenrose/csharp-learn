@@ -1,5 +1,8 @@
+using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using Xceed.Wpf.Toolkit;
 
 namespace WpfApp1
@@ -12,21 +15,6 @@ namespace WpfApp1
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void ScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            Label1.Content = $"x: {e.NewValue}";
-        }
-
-        private void ScrollBar_ValueChanged_1(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            Label2.Content = $"x: {e.NewValue}";
-        }
-
-        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            Label3.Content = e.NewValue;
         }
 
         private void Updown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -57,6 +45,18 @@ namespace WpfApp1
         {
             ComboBox comboBox = (ComboBox)sender;
             Label3.Content = $"{comboBox.SelectedIndex}, text: {comboBox.Text}, item: {comboBox.SelectedItem}";
+        }
+    }
+
+    public class SliderConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return double.TryParse((string)parameter, out double multiplier) ? (double)value * multiplier : 0;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

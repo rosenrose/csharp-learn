@@ -8,30 +8,9 @@
         xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid x:Name="MainGrid">
-        <ScrollBar HorizontalAlignment="Left" Margin="324,33,0,0" VerticalAlignment="Top" Height="146" Width="15"
-                   ValueChanged="ScrollBar_ValueChanged_1" Maximum="100" SmallChange="1" LargeChange="10"/>
-        <ScrollBar HorizontalAlignment="Left" Margin="117,162,0,0" VerticalAlignment="Top" Height="15" Width="187"
-                   Orientation="Horizontal" ValueChanged="ScrollBar_ValueChanged" SmallChange="1" LargeChange="10" Maximum="100"/>
-        <Label Content="x:" x:Name="Label1" HorizontalAlignment="Left" Margin="117,33,0,0" VerticalAlignment="Top"/>
-        <Label Content="y:" x:Name="Label2" HorizontalAlignment="Left" Margin="117,64,0,0" VerticalAlignment="Top"/>
-        <Slider HorizontalAlignment="Left" Margin="117,221,0,0" VerticalAlignment="Top" Width="187" Height="35"
-                ValueChanged="Slider_ValueChanged" Maximum="100" LargeChange="10" SmallChange="5"/>
-        <Label Content="Label" x:Name="Label3" HorizontalAlignment="Left" Margin="324,217,0,0" VerticalAlignment="Top"/>
-        <xctk:DecimalUpDown Margin="117,261,496,119" Maximum="100" Minimum="0" Increment="10"
-                            ValueChanged="Updown_ValueChanged"/>
-        <xctk:ButtonSpinner Margin="324,261,279,119" Spin="ButtonSpinner_Spin" InputScope="Xml">
-            <ComboBox Style="{DynamicResource ComboBoxStyle1}" IsEditable="True" Text="ButtonSpinner" Height="25" HorizontalAlignment="Right"
-                      SelectionChanged="ComboBox_SelectionChanged">
-                <ComboBoxItem Content="apple"/>
-                <ComboBoxItem Content="banana"/>
-                <ComboBoxItem Content="grape"/>
-                <ComboBoxItem Content="peach"/>
-            </ComboBox>
-        </xctk:ButtonSpinner>
-    </Grid>
     <!--콤보박스 템플릿 편집 → 복사본 편집-->
     <Window.Resources>
+        <local:SliderConverter x:Key="SliderConverter"/>
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
                 <Setter.Value>
@@ -217,5 +196,30 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
+    <Grid x:Name="MainGrid">
+        <ScrollBar x:Name="VScroll" HorizontalAlignment="Left" Margin="324,33,0,0" VerticalAlignment="Top" Height="146" Width="15"
+                   Maximum="100" SmallChange="1" LargeChange="10"/>
+        <ScrollBar x:Name="HScroll" HorizontalAlignment="Left" Margin="117,162,0,0" VerticalAlignment="Top" Height="15" Width="187"
+                   Orientation="Horizontal" SmallChange="1" LargeChange="10" Maximum="100"/>
+        <Label Content="{Binding ElementName=HScroll, Path=Value}" ContentStringFormat="x: {0}"
+               HorizontalAlignment="Left" Margin="117,33,0,0" VerticalAlignment="Top"/>
+        <TextBlock Text="{Binding ElementName=VScroll, Path=Value, StringFormat=y: {0}}"
+               HorizontalAlignment="Left" Margin="117,64,0,0" VerticalAlignment="Top"/>
+        <Slider x:Name="Slider" HorizontalAlignment="Left" Margin="117,221,0,0" VerticalAlignment="Top" Width="187" Height="35"
+                Maximum="1" LargeChange="0.1" SmallChange="0.01"/>
+        <Label Content="{Binding ElementName=Slider, Path=Value, Converter={StaticResource SliderConverter}, ConverterParameter=100}"
+               x:Name="Label3" HorizontalAlignment="Left" Margin="324,217,0,0" VerticalAlignment="Top"/>
+        <xctk:DecimalUpDown Margin="117,261,496,119" Maximum="100" Minimum="0" Increment="10"
+                            ValueChanged="Updown_ValueChanged"/>
+        <xctk:ButtonSpinner Margin="324,261,279,119" Spin="ButtonSpinner_Spin" InputScope="Xml">
+            <ComboBox Style="{DynamicResource ComboBoxStyle1}" IsEditable="True" Text="ButtonSpinner" Height="25" HorizontalAlignment="Right"
+                      SelectionChanged="ComboBox_SelectionChanged">
+                <ComboBoxItem Content="apple"/>
+                <ComboBoxItem Content="banana"/>
+                <ComboBoxItem Content="grape"/>
+                <ComboBoxItem Content="peach"/>
+            </ComboBox>
+        </xctk:ButtonSpinner>
+    </Grid>
 </Window>
 
