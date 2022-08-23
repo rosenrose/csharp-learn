@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -84,7 +84,11 @@ namespace WpfApp1
             {
                 SelectedDates.Add(dateTime.ToShortDateString());
             }
+
+            //SelDates = new(Calendar2.SelectedDates.Select(dateTime => dateTime.ToShortDateString()));
+            //RaisePropertyChanged("SelDates");
         }
+        //public List<string> SelDates { get; set; }
     }
 
     public class DateTimeConverter : IMultiValueConverter
@@ -105,17 +109,9 @@ namespace WpfApp1
 
     public class CalendarConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object param, CultureInfo culture)
-        {
-            List<string> SelectedDates = new();
+        public object Convert(object value, Type targetType, object param, CultureInfo culture) =>
+            ((SelectedDatesCollection)value).Select(dateTime => dateTime.ToLongDateString());
 
-            foreach (DateTime dateTime in (SelectedDatesCollection)value)
-            {
-                SelectedDates.Add(dateTime.ToLongDateString());
-            }
-
-            return SelectedDates;
-        }
         public object ConvertBack(object value, Type targetType, object param, CultureInfo culture)
         {
             throw new NotImplementedException();
