@@ -4,8 +4,34 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid x:Name="MainGrid"/>
+    <Window.Resources>
+        <local:DateTimeConverter x:Key="DTConverter"/>
+    </Window.Resources>
+    <Grid x:Name="MainGrid">
+        <Button Content="Button" VerticalAlignment="Top" Click="Button_Click" Margin="38,37,693,0"/>
+        <ProgressBar HorizontalAlignment="Left" Height="20" Margin="38,86,0,0" VerticalAlignment="Top" Width="226"
+                     Value="{Binding Progress}"/>
+        <ProgressBar HorizontalAlignment="Left" Height="20" Margin="38,136,0,0" VerticalAlignment="Top" Width="226"
+                     IsIndeterminate="True"/>
+        <DatePicker x:Name="DatePicker" HorizontalAlignment="Left" Margin="292,33,0,0" VerticalAlignment="Top"/>
+        <xctk:TimePicker x:Name="TimePicker" HorizontalAlignment="Left" Margin="400,35,0,0" VerticalAlignment="Top" Width="112"/>
+        <TextBlock HorizontalAlignment="Left" Margin="532,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250">
+            <TextBlock.Text>
+                <MultiBinding Converter="{StaticResource DTConverter}">
+                    <Binding ElementName="DatePicker" Path="SelectedDate"/>
+                    <Binding ElementName="TimePicker" Path="Value"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        <Calendar x:Name="Calendar1" HorizontalAlignment="Left" Margin="292,68,0,0" VerticalAlignment="Top"
+                  SelectionMode="SingleRange"/>
+        <Calendar x:Name="Calendar2" HorizontalAlignment="Left" Margin="508,68,0,0" VerticalAlignment="Top"
+                  SelectionMode="MultipleRange" FirstDayOfWeek="Monday"/>
+        <ListBox Margin="292,245,340,10" ItemsSource="{Binding ElementName=Calendar1, Path=SelectedDates}"/>
+        <ListBox Margin="508,245,124,10" ItemsSource="{Binding ElementName=Calendar2, Path=SelectedDates}"/>
+    </Grid>
 </Window>
 
