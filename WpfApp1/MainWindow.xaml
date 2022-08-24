@@ -8,20 +8,29 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid x:Name="MainGrid">
-        <TabControl x:Name="TabControl" Margin="65,54,147,94">
-            <TabItem Header="TabItem1">
-                <Grid Background="#FFE5E5E5">
-                    <Button Content="Button1" HorizontalAlignment="Left" Margin="87,66,0,0" VerticalAlignment="Top"
-                            Click="Button1_Click"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="TabItem2">
-                <Grid Background="#FFE5E5E5">
-                    <Button Content="Button2" HorizontalAlignment="Left" Margin="161,57,0,0" VerticalAlignment="Top"
-                            Click="Button2_Click"/>
-                </Grid>
-            </TabItem>
-        </TabControl>
+        <ListView x:Name="ListView" Margin="99,61,170,193" ItemsSource="{Binding}"
+                  IsSynchronizedWithCurrentItem="True">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding FirstName}" Header="First Name" Width="100"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding LastName}" Header="Last Name" Width="150"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <TextBox x:Name="TextBox1" HorizontalAlignment="Left" Margin="99,271,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"
+                 Text="{Binding ElementName=ListView, Path=SelectedItem.FirstName, Mode=OneWay}"/>
+        <TextBox x:Name="TextBox2" HorizontalAlignment="Left" Margin="244,271,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"
+                 Text="{Binding ElementName=ListView, Path=SelectedItem.LastName, Mode=OneWay}"/>
+        <Button Content="Add" HorizontalAlignment="Left" Margin="99,315,0,0" VerticalAlignment="Top" Width="70"
+                Click="Add_Click"/>
+        <Button Content="Modify" HorizontalAlignment="Left" Margin="191,315,0,0" VerticalAlignment="Top" Width="70"
+                Click="Modify_Click"/>
+        <Button Content="Clear" HorizontalAlignment="Left" Margin="284,315,0,0" VerticalAlignment="Top" Width="70"
+                Click="Clear_Click"/>
+        <Button Content="Delete" HorizontalAlignment="Left" Margin="377,315,0,0" VerticalAlignment="Top" Width="70"
+                Click="Delete_Click"/>
+        <Button Content="Purge" HorizontalAlignment="Left" Margin="468,315,0,0" VerticalAlignment="Top" Width="70"
+                Click="Purge_Click"/>
     </Grid>
 </Window>
 
