@@ -1,20 +1,45 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace WpfApp1
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        private Employees Emps;
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void RaisePropertyChanged(string? propname = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propname));
+        }
+
+        private ObservableCollection<Employee> emps = new();
+        public ObservableCollection<Employee> Employees
+        {
+            get => emps;
+            set
+            {
+                if (emps != value)
+                {
+                    emps = value;
+                    RaisePropertyChanged("Employees");
+                }
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
 
-            Emps = new();
-            DataContext = Emps;
+            DataContext = this;
+            Employees.Add(new("hello", "world"));
+            Employees.Add(new("foo", "bar"));
+            Employees.Add(new("Kim", "John"));
+            Employees.Add(new("김", "철"));
         }
 
         private void Add_Click(object sender, RoutedEventArgs e)
@@ -23,19 +48,21 @@ namespace WpfApp1
 
             if (ListView.SelectedItems.Count == 0)
             {
-                Emps.Add(Emp);
+                Employees.Add(Emp);
                 return;
             }
 
-            Emps.Insert(ListView.SelectedIndex, Emp);
+            Employees.Insert(ListView.SelectedIndex, Emp);
         }
 
         private void Modify_Click(object sender, RoutedEventArgs e)
         {
-            foreach (Employee Item in ListView.SelectedItems)
+            if (ListView.SelectedItems.Count == 0)
             {
-                Item.Name = $"{TextBox1.Text} {TextBox2.Text}";
+                return;
             }
+
+            Employees = new(Employees.Select(emp => ListView.SelectedItems.Contains(emp) ? new(TextBox1.Text, TextBox2.Text) : emp));
         }
 
         private void Clear_Click(object sender, RoutedEventArgs e)
@@ -49,10 +76,7 @@ namespace WpfApp1
                 return;
             }
 
-            foreach (Employee Item in ListView.SelectedItems)
-            {
-                Item.Name = "";
-            }
+            Employees = new(Employees.Select(emp => ListView.SelectedItems.Contains(emp) ? new("", "") : emp));
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)
@@ -66,15 +90,12 @@ namespace WpfApp1
                 return;
             }
 
-            foreach (Employee Item in ListView.SelectedItems)
-            {
-                ListView.Items.Remove(Item);
-            }
+            Employees = new(Employees.Where(emp => !ListView.SelectedItems.Contains(emp)));
         }
 
         private void Purge_Click(object sender, RoutedEventArgs e)
         {
-            if (ListView.SelectedItems.Count == 0)
+            if (ListView.Items.Count == 0)
             {
                 return;
             }
@@ -83,20 +104,10 @@ namespace WpfApp1
                 return;
             }
 
-            Emps.Clear();
+            Employees.Clear();
         }
     }
 
-    public class Employees : ObservableCollection<Employee>
-    {
-        public Employees() : base()
-        {
-            Add(new("hello", "world"));
-            Add(new("foo", "bar"));
-            Add(new("Kim", "John"));
-            Add(new("김", "철"));
-        }
-    }
     public class Employee
     {
         public Employee(string first, string last) => (FirstName, LastName) = (first, last);

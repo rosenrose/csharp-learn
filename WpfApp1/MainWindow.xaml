@@ -8,8 +8,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid x:Name="MainGrid">
-        <ListView x:Name="ListView" Margin="99,61,170,193" ItemsSource="{Binding}"
-                  IsSynchronizedWithCurrentItem="True">
+        <ListView x:Name="ListView" Margin="99,37,170,198" ItemsSource="{Binding Employees}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding FirstName}" Header="First Name" Width="100"/>
