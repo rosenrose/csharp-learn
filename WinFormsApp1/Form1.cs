@@ -7,10 +7,14 @@ namespace WinFormsApp1
             InitializeComponent();
         }
 
-        private void Form1_Paint(object sender, PaintEventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-            imageList1.Draw(e.Graphics, 0, 0, 0);
-            imageList1.Draw(e.Graphics, 100, 0, 1);
+            MessageBox.Show($"{tabControl1.SelectedIndex} {tabControl1.SelectedTab}");
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show($"{tabControl1.SelectedIndex} {tabControl1.SelectedTab}");
         }
     }
 }

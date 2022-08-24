@@ -7,6 +7,21 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid x:Name="MainGrid"/>
+    <Grid x:Name="MainGrid">
+        <TabControl x:Name="TabControl" Margin="65,54,147,94">
+            <TabItem Header="TabItem1">
+                <Grid Background="#FFE5E5E5">
+                    <Button Content="Button1" HorizontalAlignment="Left" Margin="87,66,0,0" VerticalAlignment="Top"
+                            Click="Button1_Click"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="TabItem2">
+                <Grid Background="#FFE5E5E5">
+                    <Button Content="Button2" HorizontalAlignment="Left" Margin="161,57,0,0" VerticalAlignment="Top"
+                            Click="Button2_Click"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
 </Window>
 
