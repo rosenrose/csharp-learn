@@ -15,7 +15,7 @@ namespace WpfApp1
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propname));
         }
 
-        private Regex regex = new(@"\D+");
+        private Regex regex = new(@"\D");
         public int a, b;
         private string text1, text2;
         public string Text1
@@ -77,7 +77,7 @@ namespace WpfApp1
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            Message = ((MainWindow)Owner).Message;
+            //Message = ((MainWindow)Owner).Message;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

@@ -16,7 +16,7 @@ namespace WinFormsApp1
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            button1.Text = ((Form1)Owner).msg;
+            //button1.Text = ((Form1)Owner).msg;
         }
 
         private void button1_Click(object sender, EventArgs e)

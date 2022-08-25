@@ -8,12 +8,13 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid x:Name="MainGrid">
-        <Button Content="Modal" HorizontalAlignment="Left" Margin="270,160,0,0" VerticalAlignment="Top" Height="33" Width="80"
-                Click="Button1_Click"/>
-        <Button Content="Modeless" HorizontalAlignment="Left" Margin="376,160,0,0" VerticalAlignment="Top" Height="33" Width="80"
-                Click="Button2_Click"/>
-        <TextBox HorizontalAlignment="Left" Margin="270,114,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="186"
-                 Text="{Binding Message}"/>
+        <Menu Height="20" VerticalAlignment="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="Open File"/>
+                <MenuItem Header="Open Folder"/>
+                <MenuItem Header="Save"/>
+            </MenuItem>
+        </Menu>
     </Grid>
 </Window>
 
