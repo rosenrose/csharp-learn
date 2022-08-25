@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace WpfApp1
 {
@@ -16,8 +15,34 @@ namespace WpfApp1
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propname));
         }
 
-        public int a, b;
         private Regex regex = new(@"\D+");
+        public int a, b;
+        private string text1, text2;
+        public string Text1
+        {
+            get => text1;
+            set
+            {
+                if (text1 != (value = regex.Replace(value, "")))
+                {
+                    text1 = value;
+                    RaisePropertyChanged("Message");
+                }
+            }
+        }
+        public string Text2
+        {
+            get => text2;
+            set
+            {
+                if (text2 != (value = regex.Replace(value, "")))
+                {
+                    text2 = value;
+                    RaisePropertyChanged("Message");
+                }
+            }
+        }
+
         private string? msg;
         public string? Message
         {
@@ -40,13 +65,6 @@ namespace WpfApp1
             DataContext = this;
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TextBox txtBox = (TextBox)sender;
-
-            txtBox.Text = regex.Replace(txtBox.Text, "");
-        }
-
         private void OnClosing(object sender, CancelEventArgs e)
         {
             if (!IsModal)
@@ -64,8 +82,7 @@ namespace WpfApp1
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            a = int.TryParse(TextBox1.Text, out a) ? a : 0;
-            b = int.TryParse(TextBox2.Text, out b) ? b : 0;
+            (a, b) = (int.Parse(Text1), int.Parse(Text2));
 
             Close();
         }

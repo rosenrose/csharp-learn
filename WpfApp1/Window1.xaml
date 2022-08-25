@@ -7,10 +7,10 @@
         mc:Ignorable="d"
         Title="Window1" Height="200" Width="400" Loaded="OnLoaded" Closing="OnClosing">
     <Grid>
-        <TextBox x:Name="TextBox1" HorizontalAlignment="Left" Margin="40,42,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"
-                 InputScope="Number" TextChanged="TextBox_TextChanged"/>
-        <TextBox x:Name="TextBox2" HorizontalAlignment="Left" Margin="40,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="120"
-                 InputScope="Digits" TextChanged="TextBox_TextChanged"/>
+        <TextBox HorizontalAlignment="Left" Margin="40,42,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"
+                 InputScope="Number" Text="{Binding Text1}"/>
+        <TextBox HorizontalAlignment="Left" Margin="40,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="120"
+                 InputScope="Digits" Text="{Binding Text2}"/>
         <Button Content="{Binding Message}" HorizontalAlignment="Left" Margin="215,116,0,0" VerticalAlignment="Top" Width="62"
                 Click="Button_Click"/>
     </Grid>
