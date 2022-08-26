@@ -10,9 +10,9 @@
     <Grid x:Name="MainGrid">
         <Menu Height="20" VerticalAlignment="Top">
             <MenuItem Header="File">
-                <MenuItem Header="Open File"/>
-                <MenuItem Header="Open Folder"/>
-                <MenuItem Header="Save"/>
+                <MenuItem Header="Open File" Click="OnOpenFileClick"/>
+                <MenuItem Header="Open Folder" Click="OnOpenFolderClick"/>
+                <MenuItem Header="Save" Click="OnSaveClick"/>
             </MenuItem>
         </Menu>
     </Grid>
