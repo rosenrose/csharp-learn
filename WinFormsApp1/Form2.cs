@@ -3,10 +3,13 @@ namespace WinFormsApp1
     public partial class Form2 : Form
     {
         public int a, b;
-        public Form2()
+        private string? message;
+
+        public Form2(string msg = "")
         {
             InitializeComponent();
 
+            message = msg;
         }
 
         private void Form2_FormClosing(object sender, FormClosingEventArgs e)
@@ -16,7 +19,12 @@ namespace WinFormsApp1
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            //button1.Text = ((Form1)Owner).msg;
+            button1.Text = message;
+        }
+
+        private void Form2_Paint(object sender, PaintEventArgs e)
+        {
+            (textBox1.Text, textBox2.Text) = (a.ToString(), b.ToString());
         }
 
         private void button1_Click(object sender, EventArgs e)
