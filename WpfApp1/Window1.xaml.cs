@@ -75,11 +75,6 @@ namespace WpfApp1
             DialogResult = true;
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            //Message = ((MainWindow)Owner).Message;
-        }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             (a, b) = (int.Parse(Text1), int.Parse(Text2));

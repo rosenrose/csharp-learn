@@ -3,13 +3,11 @@ namespace WinFormsApp1
     public partial class Form2 : Form
     {
         public int a, b;
-        private string? message;
+        public string? message;
 
-        public Form2(string msg = "")
+        public Form2()
         {
             InitializeComponent();
-
-            message = msg;
         }
 
         private void Form2_FormClosing(object sender, FormClosingEventArgs e)
