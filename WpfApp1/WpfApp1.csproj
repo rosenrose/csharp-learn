@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.4.0" />
+    <PackageReference Include="MySql.Data" Version="8.0.30" />
   </ItemGroup>
 
 </Project>
