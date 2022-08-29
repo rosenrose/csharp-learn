@@ -1,4 +1,6 @@
 using MySql.Data.MySqlClient;
+using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,35 +31,12 @@ namespace WpfApp1
                 }
             }
         }
-        private string dbName;
-        public string DbName
-        {
-            get => dbName;
-            set
-            {
-                if (value != dbName)
-                {
-                    dbName = value;
-                    RaisePropertyChanged(nameof(DbName));
-                }
-            }
-        }
-        private string id;
-        public string Id
-        {
-            get => id;
-            set
-            {
-                if (value != id)
-                {
-                    id = value;
-                    RaisePropertyChanged(nameof(Id));
-                }
-            }
-        }
+        public string DbName { get; set; } = "school";
+        public string Id { get; set; } = "root";
         private string Password;
 
         private MySqlConnection? Conn = null;
+        public ObservableCollection<Student> Students { get; set; } = new();
 
         public MainWindow()
         {
@@ -88,8 +67,14 @@ namespace WpfApp1
 
         private void Open_Click(object sender, RoutedEventArgs e)
         {
-            if (Conn == null || Conn.State != System.Data.ConnectionState.Closed)
+            if (Conn == null)
             {
+                ConnectionState = "Not Connected";
+                return;
+            }
+            if (Conn.State != System.Data.ConnectionState.Closed)
+            {
+                ConnectionState = "Already Opened";
                 return;
             }
 
@@ -102,13 +87,31 @@ namespace WpfApp1
             {
                 ConnectionState = "Open Error";
             }
+
+            MySqlCommand cmd = new("SELECT * from student", Conn);
+            using MySqlDataReader Reader = cmd.ExecuteReader();
+
+            while (Reader.Read())
+            {
+                Students.Add(new()
+                {
+                    Name = (string)Reader[0],
+                    Age = Reader["Age"] == DBNull.Value ? null : (int)Reader["Age"],
+                    Gender = (Student.GenderEnum)Convert.ToInt32(Reader[2])
+                });
+            }
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-            if (Conn == null || Conn.State == System.Data.ConnectionState.Closed)
+            if (Conn == null)
             {
+                ConnectionState = "Not Connected";
                 return;
+            }
+            if (Conn.State == System.Data.ConnectionState.Closed)
+            {
+                ConnectionState = "Already Closed";
             }
 
             try
@@ -126,13 +129,17 @@ namespace WpfApp1
         {
             if (Conn == null)
             {
+                ConnectionState = "Not Connected";
                 return;
             }
 
             try
             {
                 Conn.Dispose();
+                Conn = null;
+
                 ConnectionState = "Disconnected";
+                Students.Clear();
             }
             catch
             {
@@ -144,5 +151,18 @@ namespace WpfApp1
         {
             Password = ((PasswordBox)sender).Password;
         }
+    }
+
+    public class Student
+    {
+        private string name;
+        public string Name
+        {
+            get => name;
+            set => name = value ?? "";
+        }
+        public int? Age { get; set; }
+        public enum GenderEnum { Male = 0, Female = 1 }
+        public GenderEnum Gender { get; set; }
     }
 }

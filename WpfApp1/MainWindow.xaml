@@ -8,11 +8,15 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid x:Name="MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <StackPanel Background="#EEE" Margin="0">
+        <StackPanel Background="#EEE" Margin="0" Grid.RowSpan="2">
             <StackPanel.Resources>
                 <Style TargetType="StackPanel">
                     <Setter Property="Margin" Value="10"/>
@@ -57,6 +61,30 @@
                     <Button Grid.Column="2" Content="Disconnect Server" Margin="5,0,0,0" Click="Disconnect_Click"/>
                 </Grid>
             </StackPanel>
+        </StackPanel>
+        <ListView Grid.Column="1" ItemsSource="{Binding Students}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" Width="150" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Age" Width="50" DisplayMemberBinding="{Binding Age}"/>
+                    <GridViewColumn Header="Gender" Width="70" DisplayMemberBinding="{Binding Gender}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <StackPanel Grid.Column="1" Grid.Row="1">
+        <StackPanel Orientation="Horizontal">
+            <Label Content="Name"/>
+            <TextBox TextWrapping="Wrap" Text="Name"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Label Content="Age"/>
+            <TextBox TextWrapping="Wrap" Text="Age"/>
+        </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Gender"/>
+                <TextBox TextWrapping="Wrap" Text="Gender"/>
+            </StackPanel>
+            <Button Content="Add"/>
         </StackPanel>
     </Grid>
 </Window>

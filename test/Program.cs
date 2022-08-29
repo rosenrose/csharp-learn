@@ -4,8 +4,28 @@ namespace test
     {
         static void Main(string[] args)
         {
-            DictFromEnumerable();
+            ConvertTest();
         }
+
+
+        static void ConvertTest()
+        {
+            object? a = null;
+            int? b;
+
+            b = (int?)a;
+            Console.WriteLine(b.ToString());
+            b = 10;
+            Console.WriteLine(b.ToString());
+
+            GenderEnum c = (GenderEnum)1;
+            Console.WriteLine(c.ToString());
+
+            ulong d = 0;
+            c = (GenderEnum)d;
+            Console.WriteLine(c.ToString());
+        }
+        enum GenderEnum { Male = 0, Female = 1 };
 
         static void DictFromEnumerable()
         {
