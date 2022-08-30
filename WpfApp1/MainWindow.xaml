@@ -62,6 +62,11 @@
                     <Button Grid.Column="2" Content="Disconnect Server" Margin="5,0,0,0" Click="Disconnect_Click"/>
                 </Grid>
             </StackPanel>
+            <StackPanel>
+                <Label Content="SQL" Width="400"/>
+                <TextBox Width="400" Text="{Binding Sql}"/>
+                <Button Content="Run" Click="SqlRun_Click"/>
+            </StackPanel>
         </StackPanel>
         <ListView x:Name="ListView" Grid.Column="1" ItemsSource="{Binding Students}"
                   SelectionChanged="ListView_SelectionChanged" Visibility="{Binding ListVisibility}">

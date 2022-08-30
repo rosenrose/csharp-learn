@@ -50,6 +50,7 @@ namespace WpfApp1
         public string Id { get; set; } = "root";
         private string Password;
         public ObservableCollection<Student> Students { get; set; } = new();
+        public string Sql { get; set; }
         private MySqlConnection? Conn = null;
 
         public MainWindow()
@@ -261,6 +262,33 @@ namespace WpfApp1
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpDown_Age.Value = ListView.SelectedItems.Count > 0 ? ((Student)ListView.SelectedItem).Age : null;
+        }
+
+        private void SqlRun_Click(object sender, RoutedEventArgs e)
+        {
+            MySqlCommand cmd = new(Sql, Conn);
+
+            try
+            {
+                using MySqlDataReader Reader = cmd.ExecuteReader();
+
+                Students.Clear();
+
+                while (Reader.Read())
+                {
+                    Students.Add(new()
+                    {
+                        Name = (string)Reader[0],
+                        Age = Reader["Age"] == DBNull.Value ? null : (int)Reader["Age"],
+                        Gender = (Student.GenderEnum)Convert.ToUInt32(Reader["Gender"]),
+                        CreateTime = (DateTime)Reader["create_time"]
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
     }
 
