@@ -7,6 +7,9 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <local:GenderConverter x:Key="GConverter"/>
+    </Window.Resources>
     <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
@@ -36,11 +39,11 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Database Name"/>
-                <TextBox TextWrapping="Wrap" Text="{Binding DbName}"/>
+                <TextBox Text="{Binding DbName}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="ID"/>
-                <TextBox TextWrapping="Wrap" Text="{Binding Id}"/>
+                <TextBox Text="{Binding Id}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Password"/>
@@ -54,15 +57,14 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
-                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Button Grid.Column="0" Content="Open DB" Margin="0,0,5,0" Click="Open_Click"/>
-                    <Button Grid.Column="1" Content="Close DB" Margin="5,0,5,0" Click="Close_Click"/>
                     <Button Grid.Column="2" Content="Disconnect Server" Margin="5,0,0,0" Click="Disconnect_Click"/>
                 </Grid>
             </StackPanel>
         </StackPanel>
-        <ListView Grid.Column="1" ItemsSource="{Binding Students}">
+        <ListView x:Name="ListView" Grid.Column="1" ItemsSource="{Binding Students}"
+                  SelectionChanged="ListView_SelectionChanged" Visibility="{Binding ListVisibility}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" Width="150" DisplayMemberBinding="{Binding Name}"/>
@@ -71,20 +73,51 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <StackPanel Grid.Column="1" Grid.Row="1">
-        <StackPanel Orientation="Horizontal">
-            <Label Content="Name"/>
-            <TextBox TextWrapping="Wrap" Text="Name"/>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Label Content="Age"/>
-            <TextBox TextWrapping="Wrap" Text="Age"/>
-        </StackPanel>
+        <StackPanel Grid.Column="1" Grid.Row="1" Visibility="{Binding ListVisibility}">
+            <StackPanel.Resources>
+                <Style TargetType="Grid">
+                    <Setter Property="Margin" Value="10"/>
+                </Style>
+                <Style TargetType="Label">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Width" Value="100"/>
+                </Style>
+                <Style TargetType="TextBox">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Width" Value="120"/>
+                </Style>
+                <Style TargetType="RadioButton">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Width" Value="60"/>
+                </Style>
+            </StackPanel.Resources>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Name"/>
+                <TextBox x:Name="TextBox_Name" Text="{Binding ElementName=ListView, Path=SelectedItem.Name, Mode=OneWay}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Age"/>
+                <xctk:IntegerUpDown x:Name="UpDown_Age" Width="120" Height="20" Minimum="1" Maximum="100"/>
+            </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Gender"/>
-                <TextBox TextWrapping="Wrap" Text="Gender"/>
+                <RadioButton Content="Male" GroupName="Gender" x:Name="RadioButton_Male"
+                             IsChecked="{Binding ElementName=ListView, Path=SelectedItem.Gender, Mode=OneWay, Converter={StaticResource GConverter}, ConverterParameter=Male}"/>
+                <RadioButton Content="Female" GroupName="Gender" x:Name="RadioButton_Female"
+                             IsChecked="{Binding ElementName=ListView, Path=SelectedItem.Gender, Mode=OneWay, Converter={StaticResource GConverter}, ConverterParameter=Female}"/>
             </StackPanel>
-            <Button Content="Add"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="Insert" Margin="0,0,5,0" Click="Insert_Click"/>
+                <Button Grid.Column="1" Content="Update" Margin="5,0,5,0" Click="Update_Click"/>
+                <Button Grid.Column="2" Content="Delete" Margin="5,0,5,0" Click="Delete_Click"/>
+                <Button Grid.Column="3" Content="Clear" Margin="5,0,0,0" Click="Clear_Click"/>
+            </Grid>
         </StackPanel>
     </Grid>
 </Window>

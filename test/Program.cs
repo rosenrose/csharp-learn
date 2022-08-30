@@ -4,9 +4,8 @@ namespace test
     {
         static void Main(string[] args)
         {
-            ConvertTest();
+            Console.WriteLine(DateTime.Now);
         }
-
 
         static void ConvertTest()
         {
