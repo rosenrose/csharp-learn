@@ -9,9 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Smart Cooker", "Smart Cooke
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "test", "test\test.csproj", "{AAA3032A-E09A-4631-B075-B4A44756AF9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsApp1", "WinFormsApp1\WinFormsApp1.csproj", "{02E73088-E806-4A35-8DE0-1C19A9600BA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormsApp1", "WinFormsApp1\WinFormsApp1.csproj", "{02E73088-E806-4A35-8DE0-1C19A9600BA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp1", "WpfApp1\WpfApp1.csproj", "{EDF48013-52EA-4B9D-BEFA-879B5B4F0B3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfApp1", "WpfApp1\WpfApp1.csproj", "{EDF48013-52EA-4B9D-BEFA-879B5B4F0B3C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConnectedMode", "ConnectedMode\ConnectedMode.csproj", "{6C7EF74B-D829-4586-8F88-4492F7FFADED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisconnectedMode", "DisconnectedMode\DisconnectedMode.csproj", "{8885921E-8D75-41B2-92CC-013D48A117A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{EDF48013-52EA-4B9D-BEFA-879B5B4F0B3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDF48013-52EA-4B9D-BEFA-879B5B4F0B3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDF48013-52EA-4B9D-BEFA-879B5B4F0B3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C7EF74B-D829-4586-8F88-4492F7FFADED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C7EF74B-D829-4586-8F88-4492F7FFADED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C7EF74B-D829-4586-8F88-4492F7FFADED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C7EF74B-D829-4586-8F88-4492F7FFADED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8885921E-8D75-41B2-92CC-013D48A117A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8885921E-8D75-41B2-92CC-013D48A117A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8885921E-8D75-41B2-92CC-013D48A117A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8885921E-8D75-41B2-92CC-013D48A117A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

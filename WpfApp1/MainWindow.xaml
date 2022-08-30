@@ -7,123 +7,27 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Window.Resources>
-        <local:GenderConverter x:Key="GConverter"/>
-    </Window.Resources>
     <Grid x:Name="MainGrid">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="1*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <StackPanel Background="#EEE" Margin="0" Grid.RowSpan="2">
-            <StackPanel.Resources>
-                <Style TargetType="StackPanel">
-                    <Setter Property="Margin" Value="10"/>
-                </Style>
-                <Style TargetType="Label">
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                    <Setter Property="Width" Value="150"/>
-                </Style>
-                <Style TargetType="TextBox">
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                    <Setter Property="Width" Value="150"/>
-                </Style>
-            </StackPanel.Resources>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Connection State"/>
-                <TextBlock Width="150" VerticalAlignment="Center" Text="{Binding ConnectionState}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Database Name"/>
-                <TextBox Text="{Binding DbName}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="ID"/>
-                <TextBox Text="{Binding Id}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Password"/>
-                <PasswordBox Width="150" VerticalAlignment="Center" PasswordChanged="PasswordChanged"/>
-            </StackPanel>
+        <ScrollViewer x:Name="ScrollViewr1" Margin="50,37,473,248">
             <StackPanel>
-                <Button Content="Connect Server" Click="Connect_Click"/>
+                <Button Content="Button" Height="50" Width="120"/>
+                <Button Content="Button" Height="50" Width="120"/>
+                <Button Content="Button" Height="50" Width="120"/>
+                <Button Content="Button" Height="50" Width="120"/>
             </StackPanel>
-            <StackPanel>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Content="Open DB" Margin="0,0,5,0" Click="Open_Click"/>
-                    <Button Grid.Column="2" Content="Disconnect Server" Margin="5,0,0,0" Click="Disconnect_Click"/>
-                </Grid>
-            </StackPanel>
-            <StackPanel>
-                <Label Content="SQL" Width="400"/>
-                <TextBox Width="400" Text="{Binding Sql}"/>
-                <Button Content="Run" Click="SqlRun_Click"/>
-            </StackPanel>
-        </StackPanel>
-        <ListView x:Name="ListView" Grid.Column="1" ItemsSource="{Binding Students}"
-                  SelectionChanged="ListView_SelectionChanged" Visibility="{Binding ListVisibility}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Name" Width="150" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="Age" Width="50" DisplayMemberBinding="{Binding Age}"/>
-                    <GridViewColumn Header="Gender" Width="70" DisplayMemberBinding="{Binding Gender}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <StackPanel Grid.Column="1" Grid.Row="1" Visibility="{Binding ListVisibility}">
-            <StackPanel.Resources>
-                <Style TargetType="Grid">
-                    <Setter Property="Margin" Value="10"/>
-                </Style>
-                <Style TargetType="Label">
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                    <Setter Property="Width" Value="100"/>
-                </Style>
-                <Style TargetType="TextBox">
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                    <Setter Property="Width" Value="120"/>
-                </Style>
-                <Style TargetType="RadioButton">
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                    <Setter Property="Width" Value="60"/>
-                </Style>
-            </StackPanel.Resources>
+        </ScrollViewer>
+        <ScrollViewer x:Name="ScrollViewr2" Margin="387,37,136,248" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Hidden">
             <StackPanel Orientation="Horizontal">
-                <Label Content="Name"/>
-                <TextBox x:Name="TextBox_Name" Text="{Binding ElementName=ListView, Path=SelectedItem.Name, Mode=OneWay}"/>
+                <Button Content="Button" Height="50" Width="120"/>
+                <Button Content="Button" Height="50" Width="120"/>
+                <Button Content="Button" Height="50" Width="120"/>
+                <Button Content="Button" Height="50" Width="120"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Age"/>
-                <xctk:IntegerUpDown x:Name="UpDown_Age" Width="120" Height="20" Minimum="1" Maximum="100"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Gender"/>
-                <RadioButton Content="Male" GroupName="Gender" x:Name="RadioButton_Male"
-                             IsChecked="{Binding ElementName=ListView, Path=SelectedItem.Gender, Mode=OneWay, Converter={StaticResource GConverter}, ConverterParameter=Male}"/>
-                <RadioButton Content="Female" GroupName="Gender" x:Name="RadioButton_Female"
-                             IsChecked="{Binding ElementName=ListView, Path=SelectedItem.Gender, Mode=OneWay, Converter={StaticResource GConverter}, ConverterParameter=Female}"/>
-            </StackPanel>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Insert" Margin="0,0,5,0" Click="Insert_Click"/>
-                <Button Grid.Column="1" Content="Update" Margin="5,0,5,0" Click="Update_Click"/>
-                <Button Grid.Column="2" Content="Delete" Margin="5,0,5,0" Click="Delete_Click"/>
-                <Button Grid.Column="3" Content="Clear" Margin="5,0,0,0" Click="Clear_Click"/>
-            </Grid>
-        </StackPanel>
+        </ScrollViewer>
+        <TextBlock HorizontalAlignment="Left" Margin="114,226,0,0" VerticalAlignment="Top"
+                   Text="{Binding ElementName=ScrollViewr1, Path=VerticalOffset}" Height="20" Width="200"/>
+        <TextBlock HorizontalAlignment="Left" Margin="387,226,0,0" VerticalAlignment="Top"
+                   Text="{Binding ElementName=ScrollViewr2, Path=HorizontalOffset}" Height="20" Width="200"/>
     </Grid>
 </Window>
 
