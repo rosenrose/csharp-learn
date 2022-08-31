@@ -222,17 +222,21 @@ namespace WpfApp1
                 return;
             }
 
-            MySqlCommand cmd = new($"DELETE FROM student WHERE create_time=@time;", Conn);
-            Student SelectedItem = (Student)ListView.SelectedItem;
-            DateTime CreateTime = SelectedItem.CreateTime;
-
-            cmd.Parameters.Add(new("@time", MySqlDbType.Timestamp) { Value = CreateTime });
-            cmd.Prepare();
 
             try
             {
-                cmd.ExecuteNonQuery();
-                Students.Remove(SelectedItem);
+                while (ListView.SelectedItems.Count > 0)
+                {
+                    MySqlCommand cmd = new($"DELETE FROM student WHERE create_time=@time;", Conn);
+                    Student SelectedItem = (Student)ListView.SelectedItems[0]!;
+                    DateTime CreateTime = SelectedItem.CreateTime;
+
+                    cmd.Parameters.Add(new("@time", MySqlDbType.Timestamp) { Value = CreateTime });
+                    cmd.Prepare();
+                    cmd.ExecuteNonQuery();
+
+                    Students.Remove(SelectedItem);
+                }
             }
             catch (Exception ex)
             {

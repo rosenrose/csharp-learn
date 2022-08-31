@@ -104,7 +104,10 @@ namespace DisconnectedMode
                 return;
             }
 
-            StudentTable.Rows.Remove(((DataRowView)DataGrid.SelectedItem).Row);
+            while (DataGrid.SelectedItems.Count > 0)
+            {
+                StudentTable.Rows.Remove(((DataRowView)DataGrid.SelectedItems[0]!).Row);
+            }
         }
 
         private void Clear_Click(object sender, RoutedEventArgs e)
