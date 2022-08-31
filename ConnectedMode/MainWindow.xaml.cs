@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace WpfApp1
+namespace ConnectedMode
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
