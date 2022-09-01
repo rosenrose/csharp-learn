@@ -8,7 +8,7 @@
         Title="MainWindow" Height="500" Width="800">
     <Window.Resources>
         <local:NameToFruit x:Key="NtoF"/>
-        <local:FruitToName x:Key="FtoN"/>
+        <local:FruitToAge x:Key="FtoA"/>
         <local:GenderToString x:Key="GtoS"/>
     </Window.Resources>
     <Grid>
@@ -56,7 +56,7 @@
                 <Button Content="Send Data" Click="SetData_Click" Margin="5"/>
             </StackPanel>
         </StackPanel>
-        <DataGrid x:Name="DataGrid_Name" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding NameTable}" IsReadOnly="True">
+        <DataGrid x:Name="DataGrid_Name" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding StudentTable}" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Name}" Header="Name"/>
                 <DataGridTextColumn Binding="{Binding Age}" Header="Age"/>
@@ -75,9 +75,9 @@
                        ItemsSource="{Binding ElementName=DataGrid_Name, Path=SelectedItem, Mode=OneWay, Converter={StaticResource NtoF}}"/>
         </StackPanel>
         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Width="200">
-            <Label Content="Name:" Margin="10" VerticalAlignment="Center"/>
+            <Label Content="Age:" Margin="10" VerticalAlignment="Center"/>
             <TextBox Width="100" Margin="10" VerticalAlignment="Center"
-                       Text="{Binding ElementName=DataGrid_Fruit, Path=SelectedItem, Mode=OneWay, Converter={StaticResource FtoN}}"/>
+                       Text="{Binding ElementName=DataGrid_Fruit, Path=SelectedItem, Mode=OneWay, Converter={StaticResource FtoA}}"/>
         </StackPanel>
     </Grid>
 </Window>

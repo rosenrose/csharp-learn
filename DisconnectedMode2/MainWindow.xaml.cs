@@ -21,7 +21,8 @@ namespace DisconnectedMode2
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propname));
         }
 
-        public DataTable NameTable { get; set; } = new("NameTable");
+        private DataSet StudentFruitSet = new("StudentFruitSet");
+        public DataTable StudentTable { get; set; } = new("StudentTable");
         public DataTable FruitTable { get; set; } = new("FruitTable");
         public string DbName { get; set; } = "school";
         public string Id { get; set; } = "root";
@@ -58,26 +59,26 @@ namespace DisconnectedMode2
         {
             string ConnectionString = $"Server=localhost;Port=3306;Database={DbName};Uid={Id};Pwd={Password};";
 
-            try
+            if (Conn != null)
             {
-                if (Conn != null)
-                {
-                    Conn.Dispose();
-                }
-
-                Conn = new(ConnectionString);
-                MySqlDataAdapter DataAdapter = new("SELECT * FROM student;", Conn);
-                DataAdapter.Fill(NameTable);
-
-                DataAdapter = new("SELECT * FROM fruit;", Conn);
-                DataAdapter.Fill(FruitTable);
-
-                ConnectionState = "Data Fetched";
+                Conn.Dispose();
             }
-            catch
-            {
-                ConnectionState = "Connect Error";
-            }
+
+            Conn = new(ConnectionString);
+
+            StudentFruitSet.Tables.Add(StudentTable);
+            StudentFruitSet.Tables.Add(FruitTable);
+            //MySqlDataAdapter DataAdapter = new("SELECT * FROM student; SELECT * FROM fruit;", Conn);
+            //DataAdapter.Fill(StudentFruitSet);
+
+            MySqlDataAdapter DataAdapter = new("SELECT * FROM student;", Conn);
+            DataAdapter.Fill(StudentTable);
+            DataAdapter = new("SELECT * FROM fruit;", Conn);
+            DataAdapter.Fill(FruitTable);
+
+            StudentFruitSet.Relations.Add(new("NameFruitRelation", StudentTable.Columns["Name"]!, FruitTable.Columns["Name"]!));
+
+            ConnectionState = "Data Fetched";
         }
 
         private void SetData_Click(object sender, RoutedEventArgs e)
@@ -106,7 +107,7 @@ namespace DisconnectedMode2
             => throw new NotImplementedException();
     }
 
-    public class FruitToName : IValueConverter
+    public class FruitToAge : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -118,7 +119,7 @@ namespace DisconnectedMode2
             DataRow FruitRow = ((DataRowView)value).Row;
             DataRow NameRow = FruitRow.GetParentRow("NameFruitRelation")!;
 
-            return NameRow == null ? "" : NameRow!["Name"];
+            return NameRow!["Age"];
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
