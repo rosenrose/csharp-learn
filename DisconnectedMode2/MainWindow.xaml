@@ -1,0 +1,35 @@
+<Window x:Class="DisconnectedMode2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DisconnectedMode2"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <local:NameToFruit x:Key="NtoF"/>
+        <local:FruitToName x:Key="FtoN"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <DataGrid x:Name="DataGrid_Name" Grid.Column="0" ItemsSource="{Binding NameFruitSet.Tables[0]}" IsReadOnly="True"/>
+        <DataGrid x:Name="DataGrid_Fruit" Grid.Column="1" ItemsSource="{Binding NameFruitSet.Tables[1]}" IsReadOnly="True"/>
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Width="200" Height="100">
+            <Label Content="Fruit:" Margin="10" VerticalAlignment="Center"/>
+            <ListBox Width="100" Margin="10"
+                       ItemsSource="{Binding ElementName=DataGrid_Name, Path=SelectedItem, Mode=OneWay, Converter={StaticResource NtoF}}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Width="200">
+            <Label Content="Name:" Margin="10" VerticalAlignment="Center"/>
+            <TextBox Width="100" Margin="10" VerticalAlignment="Center"
+                       Text="{Binding ElementName=DataGrid_Fruit, Path=SelectedItem, Mode=OneWay, Converter={StaticResource FtoN}}"/>
+        </StackPanel>
+    </Grid>
+</Window>

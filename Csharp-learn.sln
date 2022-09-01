@@ -13,9 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormsApp1", "WinFormsApp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfApp1", "WpfApp1\WpfApp1.csproj", "{EDF48013-52EA-4B9D-BEFA-879B5B4F0B3C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConnectedMode", "ConnectedMode\ConnectedMode.csproj", "{6C7EF74B-D829-4586-8F88-4492F7FFADED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConnectedMode1", "ConnectedMode1\ConnectedMode1.csproj", "{6C7EF74B-D829-4586-8F88-4492F7FFADED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisconnectedMode", "DisconnectedMode\DisconnectedMode.csproj", "{8885921E-8D75-41B2-92CC-013D48A117A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisconnectedMode1", "DisconnectedMode1\DisconnectedMode1.csproj", "{8885921E-8D75-41B2-92CC-013D48A117A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisconnectedMode2", "DisconnectedMode2\DisconnectedMode2.csproj", "{9E86C070-CD3E-4ED4-BF26-08DF8D1C7684}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{8885921E-8D75-41B2-92CC-013D48A117A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8885921E-8D75-41B2-92CC-013D48A117A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8885921E-8D75-41B2-92CC-013D48A117A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E86C070-CD3E-4ED4-BF26-08DF8D1C7684}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E86C070-CD3E-4ED4-BF26-08DF8D1C7684}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E86C070-CD3E-4ED4-BF26-08DF8D1C7684}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E86C070-CD3E-4ED4-BF26-08DF8D1C7684}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

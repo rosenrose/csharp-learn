@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace DisconnectedMode
+namespace DisconnectedMode1
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -38,28 +38,25 @@ namespace DisconnectedMode
 
             DataColumn TimestampCol = new("create_time", typeof(DateTime))
             {
-                AllowDBNull = false
+                AllowDBNull = false,
+                Unique = true
             };
             StudentTable.Columns.Add(TimestampCol);
             StudentTable.PrimaryKey = new[] { TimestampCol };
 
-            DataRow StudentRow = StudentTable.NewRow();
-            StudentRow.ItemArray = new object[] { "Hello", 17, Gender.Male, DateTime.Now };
-            StudentTable.Rows.Add(StudentRow);
-
-            StudentRow = StudentTable.NewRow();
-            StudentRow.ItemArray = new object[] { "World", 23, Gender.Female, DateTime.Now };
-            StudentTable.Rows.Add(StudentRow);
-
-            StudentRow = StudentTable.NewRow();
-            StudentRow.ItemArray = new object[] { "foo", 19, null, DateTime.Now };
-            StudentTable.Rows.Add(StudentRow);
-
-            StudentRow = StudentTable.NewRow();
-            StudentRow.ItemArray = new object[] { "bar", null, null, DateTime.Now };
-            StudentTable.Rows.Add(StudentRow);
+            AddRow(StudentTable, new object?[] { "Hello", 17, Gender.Male, DateTime.Now });
+            AddRow(StudentTable, new object?[] { "World", 23, Gender.Female, DateTime.Now });
+            AddRow(StudentTable, new object?[] { "foo", 19, null, DateTime.Now });
+            AddRow(StudentTable, new object?[] { "bar", null, null, DateTime.Now });
 
             //MessageBox.Show(Table1.Select("Age > 20")[0]["Name"].ToString());
+        }
+
+        private void AddRow(DataTable table, object?[] items)
+        {
+            DataRow Row = table.NewRow();
+            Row.ItemArray = items;
+            table.Rows.Add(Row);
         }
 
         private void Insert_Click(object sender, RoutedEventArgs e)

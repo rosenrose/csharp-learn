@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace ConnectedMode
+namespace ConnectedMode1
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -70,7 +70,8 @@ namespace ConnectedMode
 
             DataColumn TimestampCol = new("create_time", typeof(DateTime))
             {
-                AllowDBNull = false
+                AllowDBNull = false,
+                Unique = true
             };
             Students.Columns.Add(TimestampCol);
             Students.PrimaryKey = new[] { TimestampCol };
