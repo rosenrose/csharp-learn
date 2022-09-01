@@ -1,8 +1,11 @@
+using MySql.Data.MySqlClient;
 using System;
+using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 
 namespace DisconnectedMode2
@@ -10,69 +13,76 @@ namespace DisconnectedMode2
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        public DataSet NameFruitSet { get; set; } = new("NameFruitSet");
-        private DataTable NameTable = new("Name");
-        private DataTable FruitTable = new("Fruit");
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void RaisePropertyChanged(string? propname = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propname));
+        }
+
+        public DataTable NameTable { get; set; } = new("NameTable");
+        public DataTable FruitTable { get; set; } = new("FruitTable");
+        public string DbName { get; set; } = "school";
+        public string Id { get; set; } = "root";
+        private string Password;
+        private MySqlConnection? Conn = null;
+        private string connState;
+        public string ConnectionState
+        {
+            get => connState;
+            set
+            {
+                if (value != connState)
+                {
+                    connState = value;
+                    RaisePropertyChanged(nameof(ConnectionState));
+                }
+            }
+        }
+        public enum Gender { Male = 0, Female = 1 }
 
         public MainWindow()
         {
             InitializeComponent();
 
             DataContext = this;
-            InitializeDataSet();
         }
 
-        private void InitializeDataSet()
+        private void PasswordChanged(object sender, RoutedEventArgs e)
         {
-            NameFruitSet.Tables.Add(NameTable);
-            NameFruitSet.Tables.Add(FruitTable);
+            Password = ((PasswordBox)sender).Password;
+        }
 
-            DataColumn IdCol = new("Id", typeof(string))
+        private void GetData_Click(object sender, RoutedEventArgs e)
+        {
+            string ConnectionString = $"Server=localhost;Port=3306;Database={DbName};Uid={Id};Pwd={Password};";
+
+            try
             {
-                MaxLength = 20,
-                Unique = true
-            };
+                if (Conn != null)
+                {
+                    Conn.Dispose();
+                }
 
-            NameTable.Columns.Add(IdCol);
-            NameTable.PrimaryKey = new[] { IdCol };
-            NameTable.Columns.Add(new DataColumn("Password", typeof(string)) { MaxLength = 50 });
-            NameTable.Columns.Add(new DataColumn("Name", typeof(string)) { MaxLength = 30 });
+                Conn = new(ConnectionString);
+                MySqlDataAdapter DataAdapter = new("SELECT * FROM student;", Conn);
+                DataAdapter.Fill(NameTable);
 
-            AddRow(NameTable, new object[] { "111", "abc", "hello" });
-            AddRow(NameTable, new object[] { "223", "ghx", "world" });
-            AddRow(NameTable, new object[] { "foo", "1", "zzz" });
-            AddRow(NameTable, new object[] { "bar", "2", "ㅋㅋㅋ" });
-            AddRow(NameTable, new object[] { "empty", "", "" });
+                DataAdapter = new("SELECT * FROM fruit;", Conn);
+                DataAdapter.Fill(FruitTable);
 
-            IdCol = new("Id", typeof(string)) { MaxLength = 20 };
-            DataColumn FruitCol = new("Fruit", typeof(string)) { MaxLength = 20 };
-
-            FruitTable.Columns.Add(IdCol);
-            FruitTable.Columns.Add(FruitCol);
-            FruitTable.PrimaryKey = new[] { IdCol, FruitCol };
-            FruitTable.Constraints.Add(
-                new ForeignKeyConstraint("NameFK", NameTable.Columns["id"]!, FruitTable.Columns["id"]!)
-            );
-
-            AddRow(FruitTable, new object?[] { "111", "apple" });
-            AddRow(FruitTable, new object?[] { "223", "peach" });
-            AddRow(FruitTable, new object?[] { "223", "grape" });
-            AddRow(FruitTable, new object?[] { "foo", "grape" });
-            AddRow(FruitTable, new object?[] { "foo", "banana" });
-            AddRow(FruitTable, new object?[] { "bar", "apple" });
-            AddRow(FruitTable, new object?[] { "foo", "orange" });
-            AddRow(FruitTable, new object?[] { "bar", "strawberry" });
-
-            NameFruitSet.Relations.Add(new("NameFruitRelation", NameTable.Columns["id"]!, FruitTable.Columns["id"]!));
+                ConnectionState = "Data Fetched";
+            }
+            catch
+            {
+                ConnectionState = "Connect Error";
+            }
         }
 
-        private void AddRow(DataTable table, object?[] items)
+        private void SetData_Click(object sender, RoutedEventArgs e)
         {
-            DataRow Row = table.NewRow();
-            Row.ItemArray = items;
-            table.Rows.Add(Row);
+
         }
     }
 
@@ -108,7 +118,18 @@ namespace DisconnectedMode2
             DataRow FruitRow = ((DataRowView)value).Row;
             DataRow NameRow = FruitRow.GetParentRow("NameFruitRelation")!;
 
-            return NameRow["Name"];
+            return NameRow == null ? "" : NameRow!["Name"];
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => throw new NotImplementedException();
+    }
+
+    public class GenderToString : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return ((MainWindow.Gender)System.Convert.ToUInt32(value)).ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

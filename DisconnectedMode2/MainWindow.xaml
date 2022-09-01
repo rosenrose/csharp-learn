@@ -5,10 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DisconnectedMode2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="500" Width="800">
     <Window.Resources>
         <local:NameToFruit x:Key="NtoF"/>
         <local:FruitToName x:Key="FtoN"/>
+        <local:GenderToString x:Key="GtoS"/>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -17,16 +18,63 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
+            <RowDefinition Height="1.5*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <DataGrid x:Name="DataGrid_Name" Grid.Column="0" ItemsSource="{Binding NameFruitSet.Tables[0]}" IsReadOnly="True"/>
-        <DataGrid x:Name="DataGrid_Fruit" Grid.Column="1" ItemsSource="{Binding NameFruitSet.Tables[1]}" IsReadOnly="True"/>
-        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Width="200" Height="100">
+        <StackPanel Background="#EEE" Margin="0" Grid.RowSpan="2">
+            <StackPanel.Resources>
+                <Style TargetType="StackPanel">
+                    <Setter Property="Margin" Value="5"/>
+                </Style>
+                <Style TargetType="Label">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Width" Value="150"/>
+                </Style>
+                <Style TargetType="TextBox">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Width" Value="150"/>
+                </Style>
+            </StackPanel.Resources>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Connection State"/>
+                <TextBlock Width="150" VerticalAlignment="Center" Text="{Binding ConnectionState}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Database Name"/>
+                <TextBox Text="{Binding DbName}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="ID"/>
+                <TextBox Text="{Binding Id}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Password"/>
+                <PasswordBox Width="150" VerticalAlignment="Center" PasswordChanged="PasswordChanged"/>
+            </StackPanel>
+            <StackPanel>
+                <Button Content="Receive Data" Click="GetData_Click" Margin="5"/>
+                <Button Content="Send Data" Click="SetData_Click" Margin="5"/>
+            </StackPanel>
+        </StackPanel>
+        <DataGrid x:Name="DataGrid_Name" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding NameTable}" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name}" Header="Name"/>
+                <DataGridTextColumn Binding="{Binding Age}" Header="Age"/>
+                <DataGridTextColumn Binding="{Binding Gender, Converter={StaticResource GtoS}}" Header="Gender"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <DataGrid x:Name="DataGrid_Fruit" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding FruitTable}" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name}" Header="Name"/>
+                <DataGridTextColumn Binding="{Binding Fruit}" Header="Fruit"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Width="200" Height="100">
             <Label Content="Fruit:" Margin="10" VerticalAlignment="Center"/>
             <ListBox Width="100" Margin="10"
                        ItemsSource="{Binding ElementName=DataGrid_Name, Path=SelectedItem, Mode=OneWay, Converter={StaticResource NtoF}}"/>
         </StackPanel>
-        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Width="200">
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Width="200">
             <Label Content="Name:" Margin="10" VerticalAlignment="Center"/>
             <TextBox Width="100" Margin="10" VerticalAlignment="Center"
                        Text="{Binding ElementName=DataGrid_Fruit, Path=SelectedItem, Mode=OneWay, Converter={StaticResource FtoN}}"/>
