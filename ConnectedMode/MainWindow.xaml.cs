@@ -1,7 +1,7 @@
 using MySql.Data.MySqlClient;
 using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -49,15 +49,31 @@ namespace ConnectedMode
         public string DbName { get; set; } = "school";
         public string Id { get; set; } = "root";
         private string Password;
-        public ObservableCollection<Student> Students { get; set; } = new();
+        public DataTable Students { get; set; } = new("Student");
         public string Sql { get; set; }
         private MySqlConnection? Conn = null;
+        public enum Gender { Male = 0, Female = 1 }
 
         public MainWindow()
         {
             InitializeComponent();
 
             DataContext = this;
+
+            Students.Columns.Add(new DataColumn("Name", typeof(string))
+            {
+                MaxLength = 20,
+                AllowDBNull = false
+            });
+            Students.Columns.Add(new DataColumn("Age", typeof(int)));
+            Students.Columns.Add(new DataColumn("Gender", typeof(string)));
+
+            DataColumn TimestampCol = new("create_time", typeof(DateTime))
+            {
+                AllowDBNull = false
+            };
+            Students.Columns.Add(TimestampCol);
+            Students.PrimaryKey = new[] { TimestampCol };
         }
 
         private void Connect_Click(object sender, RoutedEventArgs e)
@@ -101,7 +117,7 @@ namespace ConnectedMode
                 ConnectionState = Conn.State.ToString();
                 ListVisibility = Visibility.Visible;
 
-                SelectStudent();
+                RunQuery("SELECT * from student");
             }
             catch
             {
@@ -109,22 +125,32 @@ namespace ConnectedMode
             }
         }
 
-        private void SelectStudent()
+        private void RunQuery(string query)
         {
-            MySqlCommand cmd = new("SELECT * from student", Conn);
-            using MySqlDataReader Reader = cmd.ExecuteReader();
+            MySqlCommand cmd = new(query, Conn);
 
-            Students.Clear();
-
-            while (Reader.Read())
+            try
             {
-                Students.Add(new()
+                using MySqlDataReader Reader = cmd.ExecuteReader();
+
+                Students.Clear();
+
+                while (Reader.Read())
                 {
-                    Name = (string)Reader[0],
-                    Age = Reader["Age"] == DBNull.Value ? null : (int)Reader["Age"],
-                    Gender = (Student.GenderEnum)Convert.ToUInt32(Reader["Gender"]),
-                    CreateTime = (DateTime)Reader["create_time"]
-                });
+                    DataRow row = Students.NewRow();
+                    row.ItemArray = new object?[]
+                    {
+                        Reader[0],
+                        Reader["Age"] == DBNull.Value ? null : Reader["Age"],
+                        (Gender)Convert.ToUInt32(Reader["Gender"]),
+                        Reader["create_time"]
+                    };
+                    Students.Rows.Add(row);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
             }
         }
 
@@ -162,19 +188,19 @@ namespace ConnectedMode
 
             string Name = TextBox_Name.Text;
             int? Age = UpDown_Age.Value;
-            Student.GenderEnum Gender = (Student.GenderEnum)Convert.ToUInt32(RadioButton_Female.IsChecked);
+            Gender gender = (Gender)Convert.ToUInt32(RadioButton_Female.IsChecked);
             DateTime CreateTime = DateTime.Now;
 
             cmd.Parameters.Add(new("@name", MySqlDbType.VarChar, 20) { Value = Name });
             cmd.Parameters.Add(new("@age", MySqlDbType.Int32) { Value = Age });
-            cmd.Parameters.Add(new("@gender", MySqlDbType.Bit) { Value = Gender });
+            cmd.Parameters.Add(new("@gender", MySqlDbType.Bit) { Value = gender });
             cmd.Parameters.Add(new("@time", MySqlDbType.Timestamp) { Value = CreateTime });
             cmd.Prepare();
 
             try
             {
                 cmd.ExecuteNonQuery();
-                SelectStudent();
+                RunQuery("SELECT * from student");
             }
             catch (Exception ex)
             {
@@ -192,19 +218,19 @@ namespace ConnectedMode
 
             string Name = TextBox_Name.Text;
             int? Age = UpDown_Age.Value;
-            Student.GenderEnum Gender = (Student.GenderEnum)Convert.ToUInt32(RadioButton_Female.IsChecked);
-            DateTime CreateTime = ((Student)ListView.SelectedItem).CreateTime;
+            Gender gender = (Gender)Convert.ToUInt32(RadioButton_Female.IsChecked);
+            DateTime CreateTime = (DateTime)((DataRowView)ListView.SelectedItem).Row["create_time"];
 
             cmd.Parameters.Add(new("@name", MySqlDbType.VarChar, 20) { Value = Name });
             cmd.Parameters.Add(new("@age", MySqlDbType.Int32) { Value = Age });
-            cmd.Parameters.Add(new("@gender", MySqlDbType.Bit) { Value = Gender });
+            cmd.Parameters.Add(new("@gender", MySqlDbType.Bit) { Value = gender });
             cmd.Parameters.Add(new("@time", MySqlDbType.Timestamp) { Value = CreateTime });
             cmd.Prepare();
 
             try
             {
                 cmd.ExecuteNonQuery();
-                SelectStudent();
+                RunQuery("SELECT * from student");
             }
             catch (Exception ex)
             {
@@ -228,14 +254,14 @@ namespace ConnectedMode
                 while (ListView.SelectedItems.Count > 0)
                 {
                     MySqlCommand cmd = new($"DELETE FROM student WHERE create_time=@time;", Conn);
-                    Student SelectedItem = (Student)ListView.SelectedItems[0]!;
-                    DateTime CreateTime = SelectedItem.CreateTime;
+                    DataRow SelectedItem = ((DataRowView)ListView.SelectedItems[0]!).Row;
+                    DateTime CreateTime = (DateTime)SelectedItem["create_time"];
 
                     cmd.Parameters.Add(new("@time", MySqlDbType.Timestamp) { Value = CreateTime });
                     cmd.Prepare();
                     cmd.ExecuteNonQuery();
 
-                    Students.Remove(SelectedItem);
+                    Students.Rows.Remove(SelectedItem);
                 }
             }
             catch (Exception ex)
@@ -265,56 +291,28 @@ namespace ConnectedMode
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            UpDown_Age.Value = ListView.SelectedItems.Count > 0 ? ((Student)ListView.SelectedItem).Age : null;
+            if (ListView.SelectedItems.Count == 0)
+            {
+                UpDown_Age.Value = null;
+                return;
+            }
+
+            var Age = ((DataRowView)ListView.SelectedItem).Row["Age"];
+
+            UpDown_Age.Value = Age == DBNull.Value ? null : (int?)Age;
         }
 
         private void SqlRun_Click(object sender, RoutedEventArgs e)
         {
-            MySqlCommand cmd = new(Sql, Conn);
-
-            try
-            {
-                using MySqlDataReader Reader = cmd.ExecuteReader();
-
-                Students.Clear();
-
-                while (Reader.Read())
-                {
-                    Students.Add(new()
-                    {
-                        Name = (string)Reader[0],
-                        Age = Reader["Age"] == DBNull.Value ? null : (int)Reader["Age"],
-                        Gender = (Student.GenderEnum)Convert.ToUInt32(Reader["Gender"]),
-                        CreateTime = (DateTime)Reader["create_time"]
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
+            RunQuery(Sql);
         }
-    }
-
-    public class Student
-    {
-        private string name;
-        public string Name
-        {
-            get => name;
-            set => name = value ?? "";
-        }
-        public int? Age { get; set; }
-        public enum GenderEnum { Male = 0, Female = 1 }
-        public GenderEnum Gender { get; set; }
-        public DateTime CreateTime { get; set; }
     }
 
     public class GenderConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return ((Student.GenderEnum)value).ToString() == (string)parameter;
+            return value == DBNull.Value ? false : (string)value == (string)parameter;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
