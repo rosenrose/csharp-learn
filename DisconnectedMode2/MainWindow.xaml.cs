@@ -66,10 +66,12 @@ namespace DisconnectedMode2
 
             Conn = new(ConnectionString);
 
-            StudentFruitSet.Tables.Add(StudentTable);
-            StudentFruitSet.Tables.Add(FruitTable);
             //MySqlDataAdapter DataAdapter = new("SELECT * FROM student; SELECT * FROM fruit;", Conn);
             //DataAdapter.Fill(StudentFruitSet);
+            //(StudentTable, FruitTable) = (StudentFruitSet.Tables[0], StudentFruitSet.Tables[1]);
+
+            StudentFruitSet.Tables.Add(StudentTable);
+            StudentFruitSet.Tables.Add(FruitTable);
 
             MySqlDataAdapter DataAdapter = new("SELECT * FROM student;", Conn);
             DataAdapter.Fill(StudentTable);
