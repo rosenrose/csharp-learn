@@ -192,10 +192,12 @@ namespace ConnectedMode1
             Gender gender = (Gender)Convert.ToUInt32(RadioButton_Female.IsChecked);
             DateTime CreateTime = DateTime.Now;
 
-            cmd.Parameters.Add(new("@name", MySqlDbType.VarChar, 20) { Value = Name });
-            cmd.Parameters.Add(new("@age", MySqlDbType.Int32) { Value = Age });
-            cmd.Parameters.Add(new("@gender", MySqlDbType.Bit) { Value = gender });
-            cmd.Parameters.Add(new("@time", MySqlDbType.Timestamp) { Value = CreateTime });
+            cmd.Parameters.AddWithValue("@name", Name);
+            cmd.Parameters.AddWithValue("@age", Age);
+            cmd.Parameters.AddWithValue("@gender", gender);
+            cmd.Parameters.AddWithValue("@time", CreateTime);
+            //cmd.Parameters.Add(new("@gender", MySqlDbType.Bit) { Value = gender });
+            //cmd.Parameters.Add(new("@time", MySqlDbType.Timestamp) { Value = CreateTime });
             cmd.Prepare();
 
             try
@@ -222,10 +224,10 @@ namespace ConnectedMode1
             Gender gender = (Gender)Convert.ToUInt32(RadioButton_Female.IsChecked);
             DateTime CreateTime = (DateTime)((DataRowView)ListView.SelectedItem).Row["create_time"];
 
-            cmd.Parameters.Add(new("@name", MySqlDbType.VarChar, 20) { Value = Name });
-            cmd.Parameters.Add(new("@age", MySqlDbType.Int32) { Value = Age });
-            cmd.Parameters.Add(new("@gender", MySqlDbType.Bit) { Value = gender });
-            cmd.Parameters.Add(new("@time", MySqlDbType.Timestamp) { Value = CreateTime });
+            cmd.Parameters.AddWithValue("@name", Name);
+            cmd.Parameters.AddWithValue("@age", Age);
+            cmd.Parameters.AddWithValue("@gender", gender);
+            cmd.Parameters.AddWithValue("@time", CreateTime);
             cmd.Prepare();
 
             try
@@ -258,7 +260,7 @@ namespace ConnectedMode1
                     DataRow SelectedItem = ((DataRowView)ListView.SelectedItems[0]!).Row;
                     DateTime CreateTime = (DateTime)SelectedItem["create_time"];
 
-                    cmd.Parameters.Add(new("@time", MySqlDbType.Timestamp) { Value = CreateTime });
+                    cmd.Parameters.AddWithValue("@time", CreateTime);
                     cmd.Prepare();
                     cmd.ExecuteNonQuery();
 
