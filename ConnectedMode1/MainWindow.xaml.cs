@@ -128,7 +128,7 @@ namespace ConnectedMode1
 
         private void RunQuery(string query)
         {
-            MySqlCommand cmd = new(query, Conn);
+            using MySqlCommand cmd = new(query, Conn);
 
             try
             {
@@ -185,19 +185,16 @@ namespace ConnectedMode1
 
         private void Insert_Click(object sender, RoutedEventArgs e)
         {
-            MySqlCommand cmd = new($"INSERT INTO student VALUES (@name, @age, @gender, @time);", Conn);
+            using MySqlCommand cmd = new("INSERT INTO student (Name, Age, Gender) VALUES (@name, @age, @gender);", Conn);
 
             string Name = TextBox_Name.Text;
             int? Age = UpDown_Age.Value;
             Gender gender = (Gender)Convert.ToUInt32(RadioButton_Female.IsChecked);
-            DateTime CreateTime = DateTime.Now;
 
             cmd.Parameters.AddWithValue("@name", Name);
             cmd.Parameters.AddWithValue("@age", Age);
             cmd.Parameters.AddWithValue("@gender", gender);
-            cmd.Parameters.AddWithValue("@time", CreateTime);
             //cmd.Parameters.Add(new("@gender", MySqlDbType.Bit) { Value = gender });
-            //cmd.Parameters.Add(new("@time", MySqlDbType.Timestamp) { Value = CreateTime });
             cmd.Prepare();
 
             try
@@ -217,7 +214,7 @@ namespace ConnectedMode1
                 return;
             }
 
-            MySqlCommand cmd = new($"UPDATE student SET Name=@name, Age=@age, Gender=@gender WHERE create_time=@time;", Conn);
+            using MySqlCommand cmd = new("UPDATE student SET Name=@name, Age=@age, Gender=@gender WHERE create_time=@time;", Conn);
 
             string Name = TextBox_Name.Text;
             int? Age = UpDown_Age.Value;
@@ -256,7 +253,7 @@ namespace ConnectedMode1
             {
                 while (ListView.SelectedItems.Count > 0)
                 {
-                    MySqlCommand cmd = new($"DELETE FROM student WHERE create_time=@time;", Conn);
+                    using MySqlCommand cmd = new("DELETE FROM student WHERE create_time=@time;", Conn);
                     DataRow SelectedItem = ((DataRowView)ListView.SelectedItems[0]!).Row;
                     DateTime CreateTime = (DateTime)SelectedItem["create_time"];
 
@@ -264,7 +261,7 @@ namespace ConnectedMode1
                     cmd.Prepare();
                     cmd.ExecuteNonQuery();
 
-                    Students.Rows.Remove(SelectedItem);
+                    SelectedItem.Delete();
                 }
             }
             catch (Exception ex)
@@ -280,7 +277,7 @@ namespace ConnectedMode1
                 return;
             }
 
-            MySqlCommand cmd = new($"DELETE FROM student;", Conn);
+            using MySqlCommand cmd = new("DELETE FROM student;", Conn);
             try
             {
                 cmd.ExecuteNonQuery();

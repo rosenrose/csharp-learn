@@ -8,6 +8,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
+        <local:GenderToString x:Key="GtoS"/>
         <local:GenderConverter x:Key="GConverter"/>
     </Window.Resources>
     <Grid>
@@ -16,12 +17,57 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <DataGrid x:Name="DataGrid" Grid.ColumnSpan="2" ItemsSource="{Binding StudentTable}" IsReadOnly="True"
-                  SelectionChanged="DataGrid_SelectionChanged"/>
-        <StackPanel Grid.Row="1">
+        <StackPanel Background="#EEE" Margin="0" Grid.RowSpan="2">
+            <StackPanel.Resources>
+                <Style TargetType="StackPanel">
+                    <Setter Property="Margin" Value="10"/>
+                </Style>
+                <Style TargetType="Label">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Width" Value="150"/>
+                </Style>
+                <Style TargetType="TextBox">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Width" Value="150"/>
+                </Style>
+            </StackPanel.Resources>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Connection State"/>
+                <TextBlock Width="150" VerticalAlignment="Center" Text="{Binding ConnectionState}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Database Name"/>
+                <TextBox Text="{Binding DbName}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="ID"/>
+                <TextBox Text="{Binding Id}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Password"/>
+                <PasswordBox Width="150" VerticalAlignment="Center" PasswordChanged="PasswordChanged"/>
+            </StackPanel>
+            <StackPanel>
+                <Button Content="Receive Data" Click="Receive_Click" Margin="5"/>
+            </StackPanel>
+            <StackPanel>
+                <Label Content="Search" Width="400"/>
+                <TextBox Width="400" Text="{Binding SearchName}"/>
+                <Button Content="Run" Click="Search_Click"/>
+            </StackPanel>
+        </StackPanel>
+        <DataGrid x:Name="DataGrid" Grid.Column="1" ItemsSource="{Binding StudentTable}" IsReadOnly="True"
+                  SelectionChanged="DataGrid_SelectionChanged" Visibility="{Binding GridVisibility}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name}" Header="Name"/>
+                <DataGridTextColumn Binding="{Binding Age}" Header="Age"/>
+                <DataGridTextColumn Binding="{Binding Gender, Converter={StaticResource GtoS}}" Header="Gender"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Grid.Row="1" Grid.Column="1" Visibility="{Binding GridVisibility}">
             <StackPanel.Resources>
                 <Style TargetType="Grid">
                     <Setter Property="Margin" Value="10"/>

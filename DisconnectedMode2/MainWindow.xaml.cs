@@ -21,9 +21,33 @@ namespace DisconnectedMode2
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propname));
         }
 
-        private DataSet StudentFruitSet = new("StudentFruitSet");
-        public DataTable StudentTable { get; set; } = new("StudentTable");
-        public DataTable FruitTable { get; set; } = new("FruitTable");
+        private DataSet NameFruitSet = new("NameFruitSet");
+        public DataTable nTable = new("NameTable");
+        public DataTable NameTable
+        {
+            get => nTable;
+            set
+            {
+                if (value != nTable)
+                {
+                    nTable = value;
+                    RaisePropertyChanged(nameof(NameTable));
+                }
+            }
+        }
+        public DataTable fTable = new("FruitTable");
+        public DataTable FruitTable
+        {
+            get => fTable;
+            set
+            {
+                if (value != fTable)
+                {
+                    fTable = value;
+                    RaisePropertyChanged(nameof(FruitTable));
+                }
+            }
+        }
         public string DbName { get; set; } = "school";
         public string Id { get; set; } = "root";
         private string Password;
@@ -66,19 +90,13 @@ namespace DisconnectedMode2
 
             Conn = new(ConnectionString);
 
-            //MySqlDataAdapter DataAdapter = new("SELECT * FROM student; SELECT * FROM fruit;", Conn);
-            //DataAdapter.Fill(StudentFruitSet);
-            //(StudentTable, FruitTable) = (StudentFruitSet.Tables[0], StudentFruitSet.Tables[1]);
+            MySqlDataAdapter DataAdapter = new("SELECT * FROM name; SELECT * FROM fruit;", Conn);
+            NameFruitSet.Clear();
+            DataAdapter.Fill(NameFruitSet);
+            (NameTable, FruitTable) = (NameFruitSet.Tables[0], NameFruitSet.Tables[1]);
 
-            StudentFruitSet.Tables.Add(StudentTable);
-            StudentFruitSet.Tables.Add(FruitTable);
-
-            MySqlDataAdapter DataAdapter = new("SELECT * FROM student;", Conn);
-            DataAdapter.Fill(StudentTable);
-            DataAdapter = new("SELECT * FROM fruit;", Conn);
-            DataAdapter.Fill(FruitTable);
-
-            StudentFruitSet.Relations.Add(new("NameFruitRelation", StudentTable.Columns["Name"]!, FruitTable.Columns["Name"]!));
+            NameFruitSet.Relations.Clear();
+            NameFruitSet.Relations.Add(new("NameFruitRelation", NameTable.Columns["Id"]!, FruitTable.Columns["Id"]!));
 
             ConnectionState = "Data Fetched";
         }
@@ -89,7 +107,7 @@ namespace DisconnectedMode2
         }
     }
 
-    public class NameToFruit : IValueConverter
+    public class IdToFruit : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -109,7 +127,7 @@ namespace DisconnectedMode2
             => throw new NotImplementedException();
     }
 
-    public class FruitToAge : IValueConverter
+    public class IdToName : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -121,18 +139,7 @@ namespace DisconnectedMode2
             DataRow FruitRow = ((DataRowView)value).Row;
             DataRow NameRow = FruitRow.GetParentRow("NameFruitRelation")!;
 
-            return NameRow!["Age"];
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-            => throw new NotImplementedException();
-    }
-
-    public class GenderToString : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return ((MainWindow.Gender)System.Convert.ToUInt32(value)).ToString();
+            return NameRow!["Name"];
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
