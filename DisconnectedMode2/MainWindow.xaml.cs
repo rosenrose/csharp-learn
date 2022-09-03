@@ -1,5 +1,6 @@
 using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Globalization;
@@ -48,10 +49,6 @@ namespace DisconnectedMode2
                 }
             }
         }
-        public string DbName { get; set; } = "school";
-        public string Id { get; set; } = "root";
-        private string Password;
-        private MySqlConnection? Conn = null;
         private string connState;
         public string ConnectionState
         {
@@ -65,13 +62,52 @@ namespace DisconnectedMode2
                 }
             }
         }
-        public enum Gender { Male = 0, Female = 1 }
+        public string DbName { get; set; } = "school";
+        public string Id { get; set; } = "root";
+        private string Password;
+        private MySqlConnection? Conn = null;
+        private MySqlDataAdapter NameAdapter;
+        private MySqlDataAdapter FruitAdapter;
+        private Visibility visibility = Visibility.Hidden;
+        public Visibility InputVisibility
+        {
+            get => visibility;
+            set
+            {
+                if (value != visibility)
+                {
+                    visibility = value;
+                    RaisePropertyChanged(nameof(InputVisibility));
+                }
+            }
+        }
+        private IEnumerable<object> ids;
+        public IEnumerable<object> Ids
+        {
+            get => ids;
+            set
+            {
+                if (value != ids)
+                {
+                    ids = value;
+                    RaisePropertyChanged(nameof(Ids));
+                }
+            }
+        }
 
         public MainWindow()
         {
             InitializeComponent();
 
             DataContext = this;
+        }
+
+        private void SqlCommandInit()
+        {
+            NameAdapter = new("SELECT * FROM name;", Conn);
+            FruitAdapter = new("SELECT * FROM fruit;", Conn);
+            MySqlCommandBuilder NameBuilder = new(NameAdapter);
+            MySqlCommandBuilder FruitBuilder = new(FruitAdapter);
         }
 
         private void PasswordChanged(object sender, RoutedEventArgs e)
@@ -81,14 +117,8 @@ namespace DisconnectedMode2
 
         private void GetData_Click(object sender, RoutedEventArgs e)
         {
-            string ConnectionString = $"Server=localhost;Port=3306;Database={DbName};Uid={Id};Pwd={Password};";
-
-            if (Conn != null)
-            {
-                Conn.Dispose();
-            }
-
-            Conn = new(ConnectionString);
+            Conn = new($"Server=localhost;Port=3306;Database={DbName};Uid={Id};Pwd={Password};");
+            SqlCommandInit();
 
             MySqlDataAdapter DataAdapter = new("SELECT * FROM name; SELECT * FROM fruit;", Conn);
             NameFruitSet.Clear();
@@ -99,11 +129,218 @@ namespace DisconnectedMode2
             NameFruitSet.Relations.Add(new("NameFruitRelation", NameTable.Columns["Id"]!, FruitTable.Columns["Id"]!));
 
             ConnectionState = "Data Fetched";
+            InputVisibility = Visibility.Visible;
+            UpdateNameTableAndIds();
         }
 
-        private void SetData_Click(object sender, RoutedEventArgs e)
+        private DataRow AddRow(DataTable table, object?[] items)
         {
+            DataRow row = table.NewRow();
+            row.ItemArray = items;
+            table.Rows.Add(row);
 
+            return row;
+        }
+
+        private void UpdateNameTableAndIds()
+        {
+            NameAdapter.Update(NameTable);
+            Ids = NameTable.Rows.Cast<DataRow>().Select(row => row["Id"]);
+        }
+
+        private void NameInsert_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                AddRow(NameTable, new object?[] { Name_Id.Text, Name.Text });
+                UpdateNameTableAndIds();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+        private void NameUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataGrid_Name.SelectedItems.Count == 0)
+            {
+                return;
+            }
+
+            DataRow row = ((DataRowView)DataGrid_Name.SelectedItem).Row;
+            object?[] SavedItemArray = row.ItemArray;
+
+            try
+            {
+                row.ItemArray = new object?[] { Name_Id.Text, Name.Text };
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+
+            try
+            {
+                UpdateNameTableAndIds();
+            }
+            catch (Exception ex)
+            {
+                string NewId = Name_Id.Text;
+                row.ItemArray = SavedItemArray;
+
+                if (ex is MySqlException && ex.Message.Contains("a foreign key constraint fails"))
+                {
+                    AddRow(NameTable, new object?[] { NewId, Name.Text });
+                    UpdateNameTableAndIds();
+
+                    DataRow[] FruitRows = row.GetChildRows("NameFruitRelation");
+                    foreach (DataRow Row in FruitRows)
+                    {
+                        AddRow(FruitTable, new object?[] { NewId, Row["Fruit"] });
+                    }
+
+                    DeleteNameRow(row);
+                    FruitAdapter.Update(FruitTable);
+                    UpdateNameTableAndIds();
+
+                    return;
+                }
+
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+        private void DeleteNameRow(DataRow row)
+        {
+            DataRow[] FruitRows = row.GetChildRows("NameFruitRelation");
+
+            foreach (DataRow Row in FruitRows)
+            {
+                Row.Delete();
+            }
+
+            row.Delete();
+        }
+
+        private void NameDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataGrid_Name.SelectedItems.Count == 0)
+            {
+                return;
+            }
+            if (MessageBox.Show("Delete?", "Delete", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            while (DataGrid_Name.SelectedItems.Count > 0)
+            {
+                DataRow NameRow = ((DataRowView)DataGrid_Name.SelectedItems[0]!).Row;
+                DeleteNameRow(NameRow);
+            }
+
+            FruitAdapter.Update(FruitTable);    //종속관계를 먼저 업데이트
+            UpdateNameTableAndIds();
+        }
+        private void NameClear_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("Clear?", "Clear", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            try
+            {
+                while (NameTable.Rows.Count > 0)
+                {
+                    DeleteNameRow(NameTable.Rows[0]);
+                    FruitAdapter.Update(FruitTable);
+                    UpdateNameTableAndIds();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+        private void FruitInsert_Click(object sender, RoutedEventArgs e)
+        {
+            DataRow? AddedRow = null;
+
+            try
+            {
+                AddedRow = AddRow(FruitTable, new object?[] { Fruit_Id.Text, Fruit.Text });
+                FruitAdapter.Update(FruitTable);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+
+                if (AddedRow == null)
+                {
+                    return;
+                }
+                FruitTable.Rows.Remove(AddedRow!);
+            }
+        }
+        private void FruitUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataGrid_Fruit.SelectedItems.Count == 0)
+            {
+                return;
+            }
+
+            DataRow row = ((DataRowView)DataGrid_Fruit.SelectedItem).Row;
+            object?[] SavedItemArray = row.ItemArray;
+
+            try
+            {
+                row.ItemArray = new object?[] { Fruit_Id.Text, Fruit.Text };
+                FruitAdapter.Update(FruitTable);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                row.ItemArray = SavedItemArray;
+            }
+        }
+        private void FruitDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataGrid_Fruit.SelectedItems.Count == 0)
+            {
+                return;
+            }
+            if (MessageBox.Show("Delete?", "Delete", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            while (DataGrid_Fruit.SelectedItems.Count > 0)
+            {
+                ((DataRowView)DataGrid_Fruit.SelectedItems[0]!).Row.Delete();
+            }
+
+            FruitAdapter.Update(FruitTable);
+        }
+        private void FruitClear_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("Clear?", "Clear", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            try
+            {
+                while (FruitTable.Rows.Count > 0)
+                {
+                    FruitTable.Rows[0].Delete();
+                    FruitAdapter.Update(FruitTable);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
     }
 

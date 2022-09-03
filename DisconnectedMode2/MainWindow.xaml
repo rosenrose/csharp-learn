@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DisconnectedMode2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="800">
+        Title="MainWindow" Height="500" Width="900">
     <Window.Resources>
         <local:IdToFruit x:Key="ItoF"/>
         <local:IdToName x:Key="ItoN"/>
@@ -52,20 +52,82 @@
             </StackPanel>
             <StackPanel>
                 <Button Content="Receive Data" Click="GetData_Click" Margin="5"/>
-                <Button Content="Send Data" Click="SetData_Click" Margin="5"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Orientation="Horizontal">
+            <StackPanel VerticalAlignment="Bottom">
+                <Label Content="Fruit" Margin="5" VerticalAlignment="Center"/>
+                <ListBox Width="100" Height="80" Margin="5"
+                            ItemsSource="{Binding ElementName=DataGrid_Name, Path=SelectedItem, Mode=OneWay, Converter={StaticResource ItoF}}"/>
+            </StackPanel>
+            <StackPanel VerticalAlignment="Bottom">
+                <Label Content="Name" Margin="5" VerticalAlignment="Center"/>
+                <TextBox Width="100" Margin="5" VerticalAlignment="Center"
+                       Text="{Binding ElementName=DataGrid_Fruit, Path=SelectedItem, Mode=OneWay, Converter={StaticResource ItoN}}"/>
             </StackPanel>
         </StackPanel>
         <DataGrid x:Name="DataGrid_Name" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding NameTable}" IsReadOnly="True"/>
         <DataGrid x:Name="DataGrid_Fruit" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding FruitTable}" IsReadOnly="True"/>
-        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Width="200" Height="100">
-            <Label Content="Fruit:" Margin="10" VerticalAlignment="Center"/>
-            <ListBox Width="100" Margin="10"
-                       ItemsSource="{Binding ElementName=DataGrid_Name, Path=SelectedItem, Mode=OneWay, Converter={StaticResource ItoF}}"/>
-        </StackPanel>
-        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Width="200">
-            <Label Content="Name:" Margin="10" VerticalAlignment="Center"/>
-            <TextBox Width="100" Margin="10" VerticalAlignment="Center"
-                       Text="{Binding ElementName=DataGrid_Fruit, Path=SelectedItem, Mode=OneWay, Converter={StaticResource ItoN}}"/>
-        </StackPanel>
+        <Grid Grid.Row="2" Grid.Column="0" Visibility="{Binding InputVisibility}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Id" Margin="5" VerticalAlignment="Center"/>
+                    <TextBox x:Name="Name_Id" Width="100" Margin="5" VerticalAlignment="Center"
+                        Text="{Binding ElementName=DataGrid_Name, Path=SelectedItem.Id, Mode=OneWay}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Name" Margin="5" VerticalAlignment="Center"/>
+                    <TextBox x:Name="Name" Width="100" Margin="5" VerticalAlignment="Center"
+                        Text="{Binding ElementName=DataGrid_Name, Path=SelectedItem.Name, Mode=OneWay}"/>
+                </StackPanel>
+            </StackPanel>
+            <Grid Grid.Column="1" VerticalAlignment="Center" Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="Insert" Margin="0,0,5,0" Click="NameInsert_Click"/>
+                <Button Grid.Column="1" Content="Update" Margin="5,0,5,0" Click="NameUpdate_Click"/>
+                <Button Grid.Column="2" Content="Delete" Margin="5,0,5,0" Click="NameDelete_Click"/>
+                <Button Grid.Column="3" Content="Clear" Margin="5,0,0,0" Click="NameClear_Click"/>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="1" Visibility="{Binding InputVisibility}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Id" Margin="5" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="Fruit_Id" Width="100" Margin="5" VerticalAlignment="Center"
+                        ItemsSource="{Binding Ids}"
+                        SelectedItem="{Binding ElementName=DataGrid_Fruit, Path=SelectedItem.Id, Mode=OneWay}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Fruit" Margin="5" VerticalAlignment="Center"/>
+                    <TextBox x:Name="Fruit" Width="100" Margin="5" VerticalAlignment="Center"
+                        Text="{Binding ElementName=DataGrid_Fruit, Path=SelectedItem.Fruit, Mode=OneWay}"/>
+                </StackPanel>
+            </StackPanel>
+            <Grid Grid.Column="1" VerticalAlignment="Center" Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="Insert" Margin="0,0,5,0" Click="FruitInsert_Click"/>
+                <Button Grid.Column="1" Content="Update" Margin="5,0,5,0" Click="FruitUpdate_Click"/>
+                <Button Grid.Column="2" Content="Delete" Margin="5,0,5,0" Click="FruitDelete_Click"/>
+                <Button Grid.Column="3" Content="Clear" Margin="5,0,0,0" Click="FruitClear_Click"/>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

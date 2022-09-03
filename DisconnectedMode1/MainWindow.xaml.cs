@@ -62,7 +62,6 @@ namespace DisconnectedMode1
             InitializeComponent();
 
             DataContext = this;
-            SqlCommandInit();
         }
 
         private void SqlCommandInit()
