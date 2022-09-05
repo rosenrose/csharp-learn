@@ -123,14 +123,21 @@ namespace DisconnectedMode2
             MySqlDataAdapter DataAdapter = new("SELECT * FROM name; SELECT * FROM fruit;", Conn);
             NameFruitSet.Clear();
             DataAdapter.Fill(NameFruitSet);
+
             (NameTable, FruitTable) = (NameFruitSet.Tables[0], NameFruitSet.Tables[1]);
+            NameTable.RowChanged += (object sender, DataRowChangeEventArgs e) => UpdateIds();
 
             NameFruitSet.Relations.Clear();
             NameFruitSet.Relations.Add(new("NameFruitRelation", NameTable.Columns["Id"]!, FruitTable.Columns["Id"]!));
 
             ConnectionState = "Data Fetched";
             InputVisibility = Visibility.Visible;
-            UpdateNameTableAndIds();
+            UpdateIds();
+        }
+
+        private void UpdateIds()
+        {
+            Ids = NameTable.Rows.Cast<DataRow>().Select(row => row["Id"]);
         }
 
         private DataRow AddRow(DataTable table, object?[] items)
@@ -142,18 +149,12 @@ namespace DisconnectedMode2
             return row;
         }
 
-        private void UpdateNameTableAndIds()
-        {
-            NameAdapter.Update(NameTable);
-            Ids = NameTable.Rows.Cast<DataRow>().Select(row => row["Id"]);
-        }
-
         private void NameInsert_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 AddRow(NameTable, new object?[] { Name_Id.Text, Name.Text });
-                UpdateNameTableAndIds();
+                NameAdapter.Update(NameTable);
             }
             catch (Exception ex)
             {
@@ -181,7 +182,7 @@ namespace DisconnectedMode2
 
             try
             {
-                UpdateNameTableAndIds();
+                NameAdapter.Update(NameTable);
             }
             catch (Exception ex)
             {
@@ -191,7 +192,7 @@ namespace DisconnectedMode2
                 if (ex is MySqlException && ex.Message.Contains("a foreign key constraint fails"))
                 {
                     AddRow(NameTable, new object?[] { NewId, Name.Text });
-                    UpdateNameTableAndIds();
+                    NameAdapter.Update(NameTable);
 
                     DataRow[] FruitRows = row.GetChildRows("NameFruitRelation");
                     foreach (DataRow Row in FruitRows)
@@ -201,7 +202,7 @@ namespace DisconnectedMode2
 
                     DeleteNameRow(row);
                     FruitAdapter.Update(FruitTable);
-                    UpdateNameTableAndIds();
+                    NameAdapter.Update(NameTable);
 
                     return;
                 }
@@ -240,7 +241,7 @@ namespace DisconnectedMode2
             }
 
             FruitAdapter.Update(FruitTable);    //종속관계를 먼저 업데이트
-            UpdateNameTableAndIds();
+            NameAdapter.Update(NameTable);
         }
         private void NameClear_Click(object sender, RoutedEventArgs e)
         {
@@ -255,7 +256,7 @@ namespace DisconnectedMode2
                 {
                     DeleteNameRow(NameTable.Rows[0]);
                     FruitAdapter.Update(FruitTable);
-                    UpdateNameTableAndIds();
+                    NameAdapter.Update(NameTable);
                 }
             }
             catch (Exception ex)
